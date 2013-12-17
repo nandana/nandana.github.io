@@ -1,0 +1,22 @@
+{
+  "apiVersion": "1.0.0",
+  "swaggerVersion": "1.2",
+  "apis":[
+  {
+    "path":"/pet/{petId}",
+    "description":"Operations about pets",
+    "operations":[
+      {
+        "method":"GET",
+        "summary":"Find pet by its unique ID",
+        "notes": "Only Pets which you have permission to see will be returned"
+      },
+    {
+        "method":"POST",
+        "summary":"Find pet by its unique ID",
+        "notes": "Only Pets which you have permission to see will be returned"
+      }
+    ]
+  }
+]
+}
