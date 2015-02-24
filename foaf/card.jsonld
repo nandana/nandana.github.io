@@ -1,0 +1,100 @@
+{
+  "@context": {
+    "dbpedia": "http://dbpedia.org/resource/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "http://id.nandana.org/card",
+      "@type": "foaf:PersonalProfileDocument",
+      "foaf:maker": {
+        "@id": "http://id.nandana.org/card#me"
+      },
+      "foaf:primaryTopic": {
+        "@id": "http://id.nandana.org/card#me"
+      },
+      "foaf:title": {
+        "@language": "en",
+        "@value": "Nandana Mihindukulasooriya's FOAF file"
+      }
+    },
+    {
+      "@id": "http://id.nandana.org/card#me",
+      "@type": "foaf:Person",
+      "foaf:based_near": {
+        "@id": "dbpedia:Madrid"
+      },
+      "foaf:currentProject": {
+        "@id": "http://mayor2.dia.fi.upm.es/oeg-upm/index.php/en/activeprojects/291-almistack"
+      },
+      "foaf:family_name": "Mihindukulasooriya",
+      "foaf:givenname": "Nandana",
+      "foaf:holdsAccount": {
+        "@id": "https://twitter.com/nandanamihindu"
+      },
+      "foaf:homepage": {
+        "@id": "http://www.nandana.org"
+      },
+      "foaf:img": {
+        "@id": "https://en.gravatar.com/nandana83#photo-0"
+      },
+      "foaf:mbox": [
+        {
+          "@id": "mailto:nmihindu@fi.upm.es"
+        },
+        {
+          "@id": "mailto:nandana@apache.org"
+        },
+        {
+          "@id": "mailto:nandana.cse@gmail.com"
+        }
+      ],
+      "foaf:name": "Nandana Mihindukulasooriya",
+      "foaf:nick": [
+        "nandanamihindu",
+        "nandana"
+      ],
+      "foaf:openid": {
+        "@id": "https://nandana.myopenid.com/"
+      },
+      "foaf:schoolHomepage": [
+        {
+          "@id": "http://www.bth.se/eng"
+        },
+        {
+          "@id": "http://www.mrt.ac.lk/"
+        },
+        {
+          "@id": "http://www.fi.upm.es/?id=inicio&idioma=english"
+        }
+      ],
+      "foaf:title": "Mr",
+      "foaf:weblog": {
+        "@id": "http://www.nandana.org"
+      },
+      "foaf:workplaceHomepage": [
+        {
+          "@id": "http://www.oeg-upm.net/"
+        },
+        {
+          "@id": "http://www.centeropenmiddleware.com/"
+        }
+      ]
+    },
+    {
+      "@id": "http://www.oeg-upm.net/#this",
+      "@type": "foaf:Group",
+      "foaf:member": {
+        "@id": "http://id.nandana.org/card#me"
+      },
+      "foaf:name": {
+        "@language": "en",
+        "@value": "Ontology Engineering Group (OEG) "
+      }
+    }
+  ]
+}
