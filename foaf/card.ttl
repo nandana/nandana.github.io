@@ -1,12 +1,12 @@
 @prefix dc: <http://purl.org/dc/terms/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 
-<http://id.nandana.org/card> a foaf:PersonalProfileDocument;
+<> a foaf:PersonalProfileDocument;
     foaf:maker <http://id.nandana.org/card#me> ;
     foaf:primaryTopic <http://id.nandana.org/card#me> ;
     foaf:title "Nandana Mihindukulasooriya's FOAF file"@en .
 
-<http://id.nandana.org/card#me> a foaf:Person;
+<#me> a foaf:Person;
     foaf:name "Nandana Mihindukulasooriya" ;
     foaf:givenname "Nandana" ;
     foaf:family_name "Mihindukulasooriya" ;

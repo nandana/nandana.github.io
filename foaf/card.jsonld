@@ -9,7 +9,7 @@
   },
   "@graph": [
     {
-      "@id": "http://id.nandana.org/card",
+      "@id": "",
       "@type": "foaf:PersonalProfileDocument",
       "foaf:maker": {
         "@id": "http://id.nandana.org/card#me"
@@ -23,7 +23,7 @@
       }
     },
     {
-      "@id": "http://id.nandana.org/card#me",
+      "@id": "#me",
       "@type": "foaf:Person",
       "foaf:based_near": {
         "@id": "dbpedia:Madrid"
