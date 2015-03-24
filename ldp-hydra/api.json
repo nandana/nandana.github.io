@@ -1,0 +1,143 @@
+{
+  "@context": [
+    "http://www.w3.org/ns/hydra/context.jsonld",
+    {
+      "vocab": "http://sandbox-nandana.rhcloud.com/ldp-hydra/vocab#",
+      "ldp": "http://www.w3.org/ns/ldp#"
+    }
+  ],
+  "@id": "http://sandbox-nandana.rhcloud.com/ldp-hydra/vocab",
+  "@type": "ApiDocumentation",
+  "title": "My LDP application API",
+  "entrypoint": "http://sandbox-nandana.rhcloud.com/ldp-hydra/bc",
+  "supportedClass": [
+    {
+      "@id": "http://www.w3.org/ns/hydra/core#Resource",
+      "@type": "hydra:Class",
+      "hydra:title": "Resource",
+      "hydra:description": null,
+      "supportedOperation": [
+
+      ],
+      "supportedProperty": [
+
+      ]
+    },
+    {
+      "@id": "http://www.w3.org/ns/hydra/core#Collection",
+      "@type": "hydra:Class",
+      "hydra:title": "Collection",
+      "hydra:description": null,
+      "supportedOperation": [
+
+      ],
+      "supportedProperty": [
+        {
+          "property": "http://www.w3.org/ns/hydra/core#member",
+          "hydra:title": "members",
+          "hydra:description": "The members of this collection.",
+          "required": null,
+          "readonly": false,
+          "writeonly": false
+        }
+      ]
+    },
+    {
+      "@id": "vocab:MyLdpBc",
+      "@type": "hydra:Class",
+      "subClassOf": "ldp:BasicContainer",
+      "label": "MyLDPContainer",
+      "description": "LDP container of my friends",
+      "supportedOperation": [
+        {
+          "@id": "_:add_new_friend",
+          "@type": "hydra:Operation",
+          "method": "POST",
+          "label": "creates a description about the new friend",
+          "description": null,
+          "expects": "vocab:Friend",
+          "returns": "vocab:Friend",
+          "statusCodes": [
+
+          ]
+        },
+        {
+          "@id": "_:get_friend_list",
+          "@type": "hydra:Operation",
+          "method": "GET",
+          "label": "Retrieves a the friend list",
+          "description": null,
+          "expects": null,
+          "returns": "vocab:MyLDPContainer",
+          "statusCodes": [
+            {
+              "code": 404,
+              "description": "If the container wasn't found."
+            }
+          ]
+        }
+      ],
+      "supportedProperty": [
+        {
+          "property": "ldp:contains",
+          "hydra:title": "containment property",
+          "hydra:description": "The resources contained in this container",
+          "required": null,
+          "readonly": false,
+          "writeonly": false
+        }
+
+
+      ]
+    },
+    {
+      "@id": "vocab:Friend",
+      "@type": "hydra:Class",
+      "subClassOf": null,
+      "label": "A class that represents a friend",
+      "description": "LDP container of my friends",
+      "supportedOperation": [
+        {
+          "@id": "_:get_friend",
+          "@type": "hydra:Operation",
+          "method": "GET",
+          "label": "Retrieves a the friend description",
+          "description": null,
+          "expects": null,
+          "returns": "vocab:Friend",
+          "statusCodes": [
+            {
+              "code": 404,
+              "description": "If the friend description wasn't found."
+            }
+          ]
+        },
+        {
+          "@id": "_:delete_friend",
+          "@type": "hydra:Operation",
+          "method": "GET",
+          "label": "Retrieves a the friend description",
+          "description": null,
+          "expects": null,
+          "returns": "vocab:Friend",
+          "statusCodes": [
+            {
+              "code": 404,
+              "description": "If the friend description wasn't found."
+            }
+          ]
+        }
+      ],
+      "supportedProperty": [
+        {
+          "property": "ldp:contains",
+          "hydra:title": "containment property",
+          "hydra:description": "The resources contained in this container",
+          "required": null,
+          "readonly": false,
+          "writeonly": false
+        }
+      ]
+    }
+  ]
+}
