@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title>DBpedia classes tree</title>
+
+    <style>
+
+	.node circle {
+	  fill: #fff;
+	  stroke: steelblue;
+	  stroke-width: 3px;
+	}
+
+	.node text { font: 12px sans-serif; }
+
+	.link {
+	  fill: none;
+	  stroke: #ccc;
+	  stroke-width: 2px;
+	}
+	
+    </style>
+
+  </head>
+
+  <body>
+
+  <h2> DBpedia classes (with number of DBpedia language chapters using them) </h2>
+
+<!-- load the d3.js library -->	
+<script src="http://d3js.org/d3.v3.min.js"></script>
+	
+<script>
+
+<!-- original data in "flat" form. From here... 
+var data = [
+    { "name" : "Level 2: A", "parent":"Top Level" },
+    { "name" : "Top Level", "parent":"DBpediaClass" },
+    { "name" : "Son of A", "parent":"Level 2: A" },
+    { "name" : "Daughter of A", "parent":"Level 2: A" },
+    { "name" : "Level 2: B", "parent":"Top Level" }
+    ];
+//... to here -->
+
+<!-- My data from a cool SPARQL query (MRA) -->	
+var data = [
+{ "name" : "DBpediaClass", "parent" : "null" },
+{ "name" : "Abbey (1)", "parent" : "ReligiousBuilding (11)" },
+{ "name" : "AcademicJournal (3)", "parent" : "PeriodicalLiterature (24)" },
+{ "name" : "AcademicSubject (0)", "parent" : "TopicalConcept (16)" },
+{ "name" : "Activity (14)", "parent" : "DBpediaClass" },
+{ "name" : "Actor (24)", "parent" : "Artist (28)" },
+{ "name" : "AdministrativeRegion (23)", "parent" : "Region (24)" },
+{ "name" : "AdultActor (9)", "parent" : "Actor (24)" },
+{ "name" : "Agent (33)", "parent" : "DBpediaClass" },
+{ "name" : "Agglomeration (0)", "parent" : "PopulatedPlace (30)" },
+{ "name" : "Aircraft (18)", "parent" : "MeanOfTransportation (22)" },
+{ "name" : "Airline (16)", "parent" : "Company (26)" },
+{ "name" : "Airport (18)", "parent" : "Infrastructure (24)" },
+{ "name" : "Album (26)", "parent" : "MusicalWork (28)" },
+{ "name" : "Altitude (0)", "parent" : "DBpediaClass" },
+{ "name" : "AmateurBoxer (1)", "parent" : "Boxer (8)" },
+{ "name" : "Ambassador (1)", "parent" : "Person (33)" },
+{ "name" : "AmericanFootballCoach (1)", "parent" : "Coach (2)" },
+{ "name" : "AmericanFootballLeague (2)", "parent" : "SportsLeague (12)" },
+{ "name" : "AmericanFootballPlayer (5)", "parent" : "GridironFootballPlayer (5)" },
+{ "name" : "AmericanFootballTeam (3)", "parent" : "SportsTeam (25)" },
+{ "name" : "Amphibian (7)", "parent" : "Animal (19)" },
+{ "name" : "AmusementParkAttraction (3)", "parent" : "ArchitecturalStructure (27)" },
+{ "name" : "AnatomicalStructure (13)", "parent" : "DBpediaClass" },
+{ "name" : "Animal (19)", "parent" : "Eukaryote (21)" },
+{ "name" : "AnimangaCharacter (1)", "parent" : "ComicsCharacter (5)" },
+{ "name" : "Anime (3)", "parent" : "Cartoon (3)" },
+{ "name" : "Annotation (0)", "parent" : "WrittenWork (29)" },
+{ "name" : "Arachnid (8)", "parent" : "Animal (19)" },
+{ "name" : "Archaea (6)", "parent" : "Species (22)" },
+{ "name" : "Archeologist (1)", "parent" : "Person (33)" },
+{ "name" : "ArcherPlayer (1)", "parent" : "Athlete (27)" },
+{ "name" : "Archipelago (0)", "parent" : "NaturalPlace (29)" },
+{ "name" : "Architect (10)", "parent" : "Person (33)" },
+{ "name" : "ArchitecturalStructure (27)", "parent" : "Place (31)" },
+{ "name" : "Archive (0)", "parent" : "CollectionOfValuables (1)" },
+{ "name" : "Area (0)", "parent" : "DBpediaClass" },
+{ "name" : "Arena (1)", "parent" : "ArchitecturalStructure (27)" },
+{ "name" : "Aristocrat (1)", "parent" : "Person (33)" },
+{ "name" : "Arrondissement (1)", "parent" : "GovernmentalAdministrativeRegion (10)" },
+{ "name" : "Artery (4)", "parent" : "AnatomicalStructure (13)" },
+{ "name" : "Article (0)", "parent" : "WrittenWork (29)" },
+{ "name" : "ArtificialSatellite (2)", "parent" : "Satellite (2)" },
+{ "name" : "Artist (28)", "parent" : "Person (33)" },
+{ "name" : "ArtistDiscography (1)", "parent" : "MusicalWork (28)" },
+{ "name" : "ArtisticGenre (0)", "parent" : "Genre (15)" },
+{ "name" : "Artwork (15)", "parent" : "Work (31)" },
+{ "name" : "Asteroid (6)", "parent" : "CelestialBody (22)" },
+{ "name" : "Astronaut (12)", "parent" : "Person (33)" },
+{ "name" : "Athlete (27)", "parent" : "Person (33)" },
+{ "name" : "Athletics (0)", "parent" : "Sport (12)" },
+{ "name" : "AthleticsPlayer (2)", "parent" : "Athlete (27)" },
+{ "name" : "Atoll (1)", "parent" : "Island (19)" },
+{ "name" : "Attack (1)", "parent" : "SocietalEvent (24)" },
+{ "name" : "AustralianFootballLeague (1)", "parent" : "SportsLeague (12)" },
+{ "name" : "AustralianFootballTeam (1)", "parent" : "SportsTeam (25)" },
+{ "name" : "AustralianRulesFootballPlayer (1)", "parent" : "Athlete (27)" },
+{ "name" : "AutoRacingLeague (2)", "parent" : "SportsLeague (12)" },
+{ "name" : "Automobile (17)", "parent" : "MeanOfTransportation (22)" },
+{ "name" : "AutomobileEngine (2)", "parent" : "Engine (3)" },
+{ "name" : "Award (13)", "parent" : "DBpediaClass" },
+{ "name" : "BackScene (1)", "parent" : "MusicalArtist (25)" },
+{ "name" : "Bacteria (9)", "parent" : "Species (22)" },
+{ "name" : "BadmintonPlayer (5)", "parent" : "Athlete (27)" },
+{ "name" : "Band (17)", "parent" : "Group (17)" },
+{ "name" : "Bank (2)", "parent" : "Company (26)" },
+{ "name" : "Baronet (1)", "parent" : "BritishRoyalty (3)" },
+{ "name" : "BaseballLeague (2)", "parent" : "SportsLeague (12)" },
+{ "name" : "BaseballPlayer (6)", "parent" : "Athlete (27)" },
+{ "name" : "BaseballSeason (1)", "parent" : "SportsTeamSeason (4)" },
+{ "name" : "BaseballTeam (3)", "parent" : "SportsTeam (25)" },
+{ "name" : "BasketballLeague (4)", "parent" : "SportsLeague (12)" },
+{ "name" : "BasketballPlayer (14)", "parent" : "Athlete (27)" },
+{ "name" : "BasketballTeam (8)", "parent" : "SportsTeam (25)" },
+{ "name" : "Bay (1)", "parent" : "BodyOfWater (25)" },
+{ "name" : "Beach (1)", "parent" : "NaturalPlace (29)" },
+{ "name" : "BeachVolleyballPlayer (2)", "parent" : "VolleyballPlayer (8)" },
+{ "name" : "BeautyQueen (2)", "parent" : "Person (33)" },
+{ "name" : "Beer (2)", "parent" : "Beverage (8)" },
+{ "name" : "Beverage (8)", "parent" : "Food (10)" },
+{ "name" : "Biathlete (1)", "parent" : "WinterSportPlayer (15)" },
+{ "name" : "BiologicalDatabase (1)", "parent" : "Database (2)" },
+{ "name" : "Biologist (1)", "parent" : "Scientist (19)" },
+{ "name" : "Biomolecule (10)", "parent" : "DBpediaClass" },
+{ "name" : "Bird (9)", "parent" : "Animal (19)" },
+{ "name" : "Birth (0)", "parent" : "PersonalEvent (0)" },
+{ "name" : "Blazon (1)", "parent" : "DBpediaClass" },
+{ "name" : "BoardGame (1)", "parent" : "Game (10)" },
+{ "name" : "BobsleighAthlete (1)", "parent" : "WinterSportPlayer (15)" },
+{ "name" : "BodyOfWater (25)", "parent" : "NaturalPlace (29)" },
+{ "name" : "Bodybuilder (1)", "parent" : "Athlete (27)" },
+{ "name" : "Bone (4)", "parent" : "AnatomicalStructure (13)" },
+{ "name" : "Book (26)", "parent" : "WrittenWork (29)" },
+{ "name" : "BowlingLeague (1)", "parent" : "SportsLeague (12)" },
+{ "name" : "Boxer (8)", "parent" : "Athlete (27)" },
+{ "name" : "Boxing (0)", "parent" : "Sport (12)" },
+{ "name" : "BoxingCategory (0)", "parent" : "Boxing (0)" },
+{ "name" : "BoxingLeague (0)", "parent" : "SportsLeague (12)" },
+{ "name" : "BoxingStyle (0)", "parent" : "Boxing (0)" },
+{ "name" : "Brain (1)", "parent" : "AnatomicalStructure (13)" },
+{ "name" : "Brewery (2)", "parent" : "Company (26)" },
+{ "name" : "Bridge (13)", "parent" : "RouteOfTransportation (20)" },
+{ "name" : "BritishRoyalty (3)", "parent" : "Royalty (6)" },
+{ "name" : "BroadcastNetwork (4)", "parent" : "Broadcaster (16)" },
+{ "name" : "Broadcaster (16)", "parent" : "Organisation (29)" },
+{ "name" : "BrownDwarf (1)", "parent" : "Star (4)" },
+{ "name" : "Building (26)", "parent" : "ArchitecturalStructure (27)" },
+{ "name" : "BullFighter (2)", "parent" : "Athlete (27)" },
+{ "name" : "BusCompany (1)", "parent" : "Company (26)" },
+{ "name" : "BusinessPerson (1)", "parent" : "Person (33)" },
+{ "name" : "Camera (1)", "parent" : "Device (21)" },
+{ "name" : "CanadianFootballLeague (1)", "parent" : "SportsLeague (12)" },
+{ "name" : "CanadianFootballPlayer (0)", "parent" : "GridironFootballPlayer (5)" },
+{ "name" : "CanadianFootballTeam (1)", "parent" : "SportsTeam (25)" },
+{ "name" : "Canal (6)", "parent" : "Stream (25)" },
+{ "name" : "Canoeist (2)", "parent" : "Athlete (27)" },
+{ "name" : "Capital (0)", "parent" : "City (21)" },
+{ "name" : "CapitalOfRegion (0)", "parent" : "City (21)" },
+{ "name" : "CardGame (0)", "parent" : "Game (10)" },
+{ "name" : "Cardinal (5)", "parent" : "Cleric (22)" },
+{ "name" : "CardinalDirection (0)", "parent" : "TopicalConcept (16)" },
+{ "name" : "CareerStation (1)", "parent" : "TimePeriod (3)" },
+{ "name" : "Cartoon (3)", "parent" : "Work (31)" },
+{ "name" : "Case (2)", "parent" : "UnitOfWork (2)" },
+{ "name" : "Casino (1)", "parent" : "Building (26)" },
+{ "name" : "Castle (5)", "parent" : "Building (26)" },
+{ "name" : "Caterer (0)", "parent" : "Company (26)" },
+{ "name" : "Cave (4)", "parent" : "NaturalPlace (29)" },
+{ "name" : "Celebrity (0)", "parent" : "Person (33)" },
+{ "name" : "CelestialBody (22)", "parent" : "Place (31)" },
+{ "name" : "Cemetery (2)", "parent" : "Place (31)" },
+{ "name" : "Chancellor (2)", "parent" : "Politician (21)" },
+{ "name" : "ChartsPlacements (1)", "parent" : "DBpediaClass" },
+{ "name" : "Cheese (3)", "parent" : "Food (10)" },
+{ "name" : "Chef (2)", "parent" : "Person (33)" },
+{ "name" : "ChemicalCompound (15)", "parent" : "ChemicalSubstance (19)" },
+{ "name" : "ChemicalElement (6)", "parent" : "ChemicalSubstance (19)" },
+{ "name" : "ChemicalSubstance (19)", "parent" : "DBpediaClass" },
+{ "name" : "ChessPlayer (6)", "parent" : "Athlete (27)" },
+{ "name" : "ChristianBishop (8)", "parent" : "Cleric (22)" },
+{ "name" : "ChristianDoctrine (1)", "parent" : "TheologicalConcept (1)" },
+{ "name" : "ChristianPatriarch (1)", "parent" : "Cleric (22)" },
+{ "name" : "Church (5)", "parent" : "ReligiousBuilding (11)" },
+{ "name" : "City (21)", "parent" : "Settlement (26)" },
+{ "name" : "CityDistrict (1)", "parent" : "Settlement (26)" },
+{ "name" : "ClassicalMusicArtist (2)", "parent" : "MusicalArtist (25)" },
+{ "name" : "ClassicalMusicComposition (1)", "parent" : "MusicalWork (28)" },
+{ "name" : "Cleric (22)", "parent" : "Person (33)" },
+{ "name" : "ClericalAdministrativeRegion (6)", "parent" : "AdministrativeRegion (23)" },
+{ "name" : "ClericalOrder (0)", "parent" : "ReligiousOrganisation (1)" },
+{ "name" : "ClubMoss (3)", "parent" : "Plant (15)" },
+{ "name" : "Coach (2)", "parent" : "Person (33)" },
+{ "name" : "CoalPit (0)", "parent" : "Mine (1)" },
+{ "name" : "CollectionOfValuables (1)", "parent" : "Work (31)" },
+{ "name" : "College (3)", "parent" : "EducationalInstitution (26)" },
+{ "name" : "CollegeCoach (1)", "parent" : "Coach (2)" },
+{ "name" : "Colour (8)", "parent" : "DBpediaClass" },
+{ "name" : "Comedian (4)", "parent" : "Artist (28)" },
+{ "name" : "ComedyGroup (1)", "parent" : "Group (17)" },
+{ "name" : "Comic (6)", "parent" : "WrittenWork (29)" },
+{ "name" : "ComicStrip (3)", "parent" : "Comic (6)" },
+{ "name" : "ComicsCharacter (5)", "parent" : "FictionalCharacter (17)" },
+{ "name" : "ComicsCreator (3)", "parent" : "Artist (28)" },
+{ "name" : "Community (0)", "parent" : "PopulatedPlace (30)" },
+{ "name" : "Company (26)", "parent" : "Organisation (29)" },
+{ "name" : "Competition (0)", "parent" : "Event (24)" },
+{ "name" : "ConcentrationCamp (1)", "parent" : "Place (31)" },
+{ "name" : "Congressman (1)", "parent" : "Politician (21)" },
+{ "name" : "Conifer (4)", "parent" : "Plant (15)" },
+{ "name" : "Constellation (8)", "parent" : "CelestialBody (22)" },
+{ "name" : "Contest (0)", "parent" : "Competition (0)" },
+{ "name" : "Continent (6)", "parent" : "PopulatedPlace (30)" },
+{ "name" : "ControlledDesignationOfOriginWine (0)", "parent" : "Wine (1)" },
+{ "name" : "Convention (3)", "parent" : "SocietalEvent (24)" },
+{ "name" : "ConveyorSystem (0)", "parent" : "On-SiteTransportation (0)" },
+{ "name" : "Country (25)", "parent" : "PopulatedPlace (30)" },
+{ "name" : "CountrySeat (0)", "parent" : "Place (31)" },
+{ "name" : "Crater (5)", "parent" : "NaturalPlace (29)" },
+{ "name" : "CricketGround (1)", "parent" : "SportFacility (18)" },
+{ "name" : "CricketLeague (1)", "parent" : "SportsLeague (12)" },
+{ "name" : "CricketTeam (1)", "parent" : "SportsTeam (25)" },
+{ "name" : "Cricketer (1)", "parent" : "Athlete (27)" },
+{ "name" : "Criminal (6)", "parent" : "Person (33)" },
+{ "name" : "CrossCountrySkier (1)", "parent" : "WinterSportPlayer (15)" },
+{ "name" : "Crustacean (7)", "parent" : "Animal (19)" },
+{ "name" : "CultivatedVariety (2)", "parent" : "Plant (15)" },
+{ "name" : "Curler (2)", "parent" : "WinterSportPlayer (15)" },
+{ "name" : "CurlingLeague (1)", "parent" : "SportsLeague (12)" },
+{ "name" : "Currency (16)", "parent" : "DBpediaClass" },
+{ "name" : "Cycad (3)", "parent" : "Plant (15)" },
+{ "name" : "CyclingCompetition (2)", "parent" : "SportsEvent (19)" },
+{ "name" : "CyclingLeague (2)", "parent" : "SportsLeague (12)" },
+{ "name" : "CyclingRace (4)", "parent" : "Race (5)" },
+{ "name" : "CyclingTeam (2)", "parent" : "SportsTeam (25)" },
+{ "name" : "Cyclist (12)", "parent" : "Athlete (27)" },
+{ "name" : "DTMRacer (1)", "parent" : "RacingDriver (10)" },
+{ "name" : "Dam (4)", "parent" : "Infrastructure (24)" },
+{ "name" : "Dancer (0)", "parent" : "Artist (28)" },
+{ "name" : "DartsPlayer (1)", "parent" : "Athlete (27)" },
+{ "name" : "Database (2)", "parent" : "Work (31)" },
+{ "name" : "Deanery (0)", "parent" : "ClericalAdministrativeRegion (6)" },
+{ "name" : "Death (0)", "parent" : "PersonalEvent (0)" },
+{ "name" : "Decoration (3)", "parent" : "Award (13)" },
+{ "name" : "Deity (2)", "parent" : "Agent (33)" },
+{ "name" : "Demographics (0)", "parent" : "DBpediaClass" },
+{ "name" : "Department (2)", "parent" : "GovernmentalAdministrativeRegion (10)" },
+{ "name" : "Depth (0)", "parent" : "DBpediaClass" },
+{ "name" : "Deputy (1)", "parent" : "Politician (21)" },
+{ "name" : "Desert (0)", "parent" : "NaturalPlace (29)" },
+{ "name" : "Device (21)", "parent" : "DBpediaClass" },
+{ "name" : "DigitalCamera (1)", "parent" : "Camera (1)" },
+{ "name" : "Diocese (6)", "parent" : "ClericalAdministrativeRegion (6)" },
+{ "name" : "Diploma (0)", "parent" : "DBpediaClass" },
+{ "name" : "Disease (17)", "parent" : "DBpediaClass" },
+{ "name" : "DisneyCharacter (0)", "parent" : "FictionalCharacter (17)" },
+{ "name" : "District (7)", "parent" : "GovernmentalAdministrativeRegion (10)" },
+{ "name" : "DistrictWaterBoard (1)", "parent" : "GovernmentalAdministrativeRegion (10)" },
+{ "name" : "Divorce (0)", "parent" : "PersonalEvent (0)" },
+{ "name" : "Document (1)", "parent" : "Work (31)" },
+{ "name" : "DocumentType (0)", "parent" : "Type (1)" },
+{ "name" : "Dog (4)", "parent" : "Mammal (14)" },
+{ "name" : "Drama (0)", "parent" : "WrittenWork (29)" },
+{ "name" : "Drug (5)", "parent" : "ChemicalSubstance (19)" },
+{ "name" : "Earthquake (1)", "parent" : "NaturalEvent (3)" },
+{ "name" : "Economist (2)", "parent" : "Person (33)" },
+{ "name" : "EducationalInstitution (26)", "parent" : "Organisation (29)" },
+{ "name" : "Egyptologist (1)", "parent" : "Person (33)" },
+{ "name" : "Election (5)", "parent" : "SocietalEvent (24)" },
+{ "name" : "ElectionDiagram (1)", "parent" : "DBpediaClass" },
+{ "name" : "ElectricalSubstation (0)", "parent" : "Station (20)" },
+{ "name" : "Embryology (1)", "parent" : "AnatomicalStructure (13)" },
+{ "name" : "Employer (0)", "parent" : "Agent (33)" },
+{ "name" : "EmployersOrganisation (1)", "parent" : "Organisation (29)" },
+{ "name" : "Engine (3)", "parent" : "Device (21)" },
+{ "name" : "Engineer (1)", "parent" : "Person (33)" },
+{ "name" : "Entomologist (1)", "parent" : "Scientist (19)" },
+{ "name" : "Enzyme (4)", "parent" : "Biomolecule (10)" },
+{ "name" : "Escalator (0)", "parent" : "On-SiteTransportation (0)" },
+{ "name" : "EthnicGroup (12)", "parent" : "DBpediaClass" },
+{ "name" : "Eukaryote (21)", "parent" : "Species (22)" },
+{ "name" : "EurovisionSongContestEntry (2)", "parent" : "Song (13)" },
+{ "name" : "Event (24)", "parent" : "DBpediaClass" },
+{ "name" : "Factory (1)", "parent" : "Building (26)" },
+{ "name" : "Family (2)", "parent" : "Agent (33)" },
+{ "name" : "Farmer (0)", "parent" : "Person (33)" },
+{ "name" : "Fashion (1)", "parent" : "TopicalConcept (16)" },
+{ "name" : "FashionDesigner (2)", "parent" : "Artist (28)" },
+{ "name" : "Fencer (2)", "parent" : "Athlete (27)" },
+{ "name" : "Fern (4)", "parent" : "Plant (15)" },
+{ "name" : "FictionalCharacter (17)", "parent" : "Person (33)" },
+{ "name" : "FieldHockeyLeague (1)", "parent" : "SportsLeague (12)" },
+{ "name" : "FigureSkater (7)", "parent" : "WinterSportPlayer (15)" },
+{ "name" : "File (0)", "parent" : "Document (1)" },
+{ "name" : "FillingStation (0)", "parent" : "Station (20)" },
+{ "name" : "Film (30)", "parent" : "Work (31)" },
+{ "name" : "FilmFestival (6)", "parent" : "SocietalEvent (24)" },
+{ "name" : "Fish (9)", "parent" : "Animal (19)" },
+{ "name" : "Flag (4)", "parent" : "DBpediaClass" },
+{ "name" : "FloweringPlant (7)", "parent" : "Plant (15)" },
+{ "name" : "Food (10)", "parent" : "DBpediaClass" },
+{ "name" : "FootballLeagueSeason (2)", "parent" : "SportsTeamSeason (4)" },
+{ "name" : "FootballMatch (7)", "parent" : "SportsEvent (19)" },
+{ "name" : "FormerMunicipality (1)", "parent" : "Municipality (6)" },
+{ "name" : "FormulaOneRacer (8)", "parent" : "RacingDriver (10)" },
+{ "name" : "FormulaOneRacing (1)", "parent" : "SportsLeague (12)" },
+{ "name" : "FormulaOneTeam (1)", "parent" : "SportsTeam (25)" },
+{ "name" : "Fungus (11)", "parent" : "Eukaryote (21)" },
+{ "name" : "GaelicGamesPlayer (2)", "parent" : "Athlete (27)" },
+{ "name" : "Galaxy (13)", "parent" : "CelestialBody (22)" },
+{ "name" : "Game (10)", "parent" : "Activity (14)" },
+{ "name" : "Garden (1)", "parent" : "Place (31)" },
+{ "name" : "Gate (0)", "parent" : "ArchitecturalStructure (27)" },
+{ "name" : "GatedCommunity (1)", "parent" : "PopulatedPlace (30)" },
+{ "name" : "Gene (1)", "parent" : "Biomolecule (10)" },
+{ "name" : "GeneLocation (1)", "parent" : "DBpediaClass" },
+{ "name" : "Genre (15)", "parent" : "TopicalConcept (16)" },
+{ "name" : "GeologicalPeriod (0)", "parent" : "TimePeriod (3)" },
+{ "name" : "GeopoliticalOrganisation (0)", "parent" : "Organisation (29)" },
+{ "name" : "Ginkgo (3)", "parent" : "Plant (15)" },
+{ "name" : "GivenName (3)", "parent" : "Name (4)" },
+{ "name" : "Glacier (2)", "parent" : "NaturalPlace (29)" },
+{ "name" : "Globularswarm (1)", "parent" : "Swarm (1)" },
+{ "name" : "Gnetophytes (3)", "parent" : "Plant (15)" },
+{ "name" : "GolfCourse (3)", "parent" : "SportFacility (18)" },
+{ "name" : "GolfLeague (1)", "parent" : "SportsLeague (12)" },
+{ "name" : "GolfPlayer (4)", "parent" : "Athlete (27)" },
+{ "name" : "GolfTournament (2)", "parent" : "Tournament (14)" },
+{ "name" : "GovernmentAgency (4)", "parent" : "Organisation (29)" },
+{ "name" : "GovernmentType (1)", "parent" : "Type (1)" },
+{ "name" : "GovernmentalAdministrativeRegion (10)", "parent" : "AdministrativeRegion (23)" },
+{ "name" : "Governor (4)", "parent" : "Politician (21)" },
+{ "name" : "GrandPrix (8)", "parent" : "SportsEvent (19)" },
+{ "name" : "Grape (3)", "parent" : "FloweringPlant (7)" },
+{ "name" : "GraveMonument (0)", "parent" : "Monument (5)" },
+{ "name" : "GreenAlga (5)", "parent" : "Plant (15)" },
+{ "name" : "GridironFootballPlayer (5)", "parent" : "Athlete (27)" },
+{ "name" : "GrossDomesticProduct (0)", "parent" : "DBpediaClass" },
+{ "name" : "GrossDomesticProductPerCapita (0)", "parent" : "DBpediaClass" },
+{ "name" : "Group (17)", "parent" : "Organisation (29)" },
+{ "name" : "Guitar (2)", "parent" : "Instrument (10)" },
+{ "name" : "Guitarist (1)", "parent" : "Instrumentalist (2)" },
+{ "name" : "Gymnast (2)", "parent" : "Athlete (27)" },
+{ "name" : "HandballLeague (1)", "parent" : "SportsLeague (12)" },
+{ "name" : "HandballPlayer (4)", "parent" : "Athlete (27)" },
+{ "name" : "HandballTeam (4)", "parent" : "SportsTeam (25)" },
+{ "name" : "HighDiver (1)", "parent" : "Athlete (27)" },
+{ "name" : "Historian (1)", "parent" : "Writer (22)" },
+{ "name" : "HistoricBuilding (6)", "parent" : "Building (26)" },
+{ "name" : "HistoricPlace (3)", "parent" : "Place (31)" },
+{ "name" : "HistoricalCountry (0)", "parent" : "Country (25)" },
+{ "name" : "HistoricalDistrict (0)", "parent" : "District (7)" },
+{ "name" : "HistoricalPeriod (0)", "parent" : "TimePeriod (3)" },
+{ "name" : "HistoricalProvince (0)", "parent" : "Province (4)" },
+{ "name" : "HistoricalRegion (0)", "parent" : "Region (24)" },
+{ "name" : "HistoricalSettlement (0)", "parent" : "Settlement (26)" },
+{ "name" : "HockeyClub (1)", "parent" : "SportsClub (1)" },
+{ "name" : "HockeyTeam (7)", "parent" : "SportsTeam (25)" },
+{ "name" : "Holiday (5)", "parent" : "DBpediaClass" },
+{ "name" : "HollywoodCartoon (1)", "parent" : "Cartoon (3)" },
+{ "name" : "Horse (3)", "parent" : "Mammal (14)" },
+{ "name" : "HorseRace (1)", "parent" : "Race (5)" },
+{ "name" : "HorseRider (2)", "parent" : "Athlete (27)" },
+{ "name" : "HorseRiding (0)", "parent" : "Sport (12)" },
+{ "name" : "HorseTrainer (1)", "parent" : "Person (33)" },
+{ "name" : "Hospital (9)", "parent" : "Building (26)" },
+{ "name" : "Host (0)", "parent" : "TelevisionPersonality (0)" },
+{ "name" : "HotSpring (1)", "parent" : "NaturalPlace (29)" },
+{ "name" : "Hotel (6)", "parent" : "Building (26)" },
+{ "name" : "HumanDevelopmentIndex (0)", "parent" : "DBpediaClass" },
+{ "name" : "HumanGene (1)", "parent" : "Gene (1)" },
+{ "name" : "HumanGeneLocation (1)", "parent" : "GeneLocation (1)" },
+{ "name" : "Humorist (1)", "parent" : "Artist (28)" },
+{ "name" : "IceHockeyLeague (2)", "parent" : "SportsLeague (12)" },
+{ "name" : "IceHockeyPlayer (12)", "parent" : "WinterSportPlayer (15)" },
+{ "name" : "Ideology (0)", "parent" : "TopicalConcept (16)" },
+{ "name" : "Image (0)", "parent" : "Document (1)" },
+{ "name" : "InformationAppliance (3)", "parent" : "Device (21)" },
+{ "name" : "Infrastructure (24)", "parent" : "ArchitecturalStructure (27)" },
+{ "name" : "InlineHockeyLeague (1)", "parent" : "SportsLeague (12)" },
+{ "name" : "Insect (8)", "parent" : "Animal (19)" },
+{ "name" : "Instrument (10)", "parent" : "Device (21)" },
+{ "name" : "Instrumentalist (2)", "parent" : "MusicalArtist (25)" },
+{ "name" : "Intercommunality (1)", "parent" : "PopulatedPlace (30)" },
+{ "name" : "InternationalFootballLeagueEvent (1)", "parent" : "SportsEvent (19)" },
+{ "name" : "InternationalOrganisation (1)", "parent" : "Organisation (29)" },
+{ "name" : "Island (19)", "parent" : "PopulatedPlace (30)" },
+{ "name" : "Jockey (1)", "parent" : "Athlete (27)" },
+{ "name" : "Journalist (5)", "parent" : "Person (33)" },
+{ "name" : "Judge (2)", "parent" : "Person (33)" },
+{ "name" : "LacrosseLeague (1)", "parent" : "SportsLeague (12)" },
+{ "name" : "LacrossePlayer (1)", "parent" : "Athlete (27)" },
+{ "name" : "Lake (18)", "parent" : "BodyOfWater (25)" },
+{ "name" : "Language (24)", "parent" : "DBpediaClass" },
+{ "name" : "LaunchPad (2)", "parent" : "Infrastructure (24)" },
+{ "name" : "Law (1)", "parent" : "WrittenWork (29)" },
+{ "name" : "LawFirm (1)", "parent" : "Company (26)" },
+{ "name" : "Lawyer (0)", "parent" : "Person (33)" },
+{ "name" : "LegalCase (2)", "parent" : "Case (2)" },
+{ "name" : "Legislature (5)", "parent" : "Organisation (29)" },
+{ "name" : "Letter (2)", "parent" : "WrittenWork (29)" },
+{ "name" : "Library (8)", "parent" : "Building (26)" },
+{ "name" : "Library (8)", "parent" : "EducationalInstitution (26)" },
+{ "name" : "Lieutenant (0)", "parent" : "Politician (21)" },
+{ "name" : "LifeCycleEvent (0)", "parent" : "Event (24)" },
+{ "name" : "Ligament (1)", "parent" : "AnatomicalStructure (13)" },
+{ "name" : "LightNovel (0)", "parent" : "Novel (1)" },
+{ "name" : "Lighthouse (4)", "parent" : "Tower (4)" },
+{ "name" : "LineOfFashion (0)", "parent" : "Work (31)" },
+{ "name" : "Linguist (1)", "parent" : "Person (33)" },
+{ "name" : "Lipid (0)", "parent" : "Biomolecule (10)" },
+{ "name" : "List (2)", "parent" : "DBpediaClass" },
+{ "name" : "LiteraryGenre (0)", "parent" : "Genre (15)" },
+{ "name" : "Locality (2)", "parent" : "PopulatedPlace (30)" },
+{ "name" : "Lock (1)", "parent" : "Infrastructure (24)" },
+{ "name" : "Locomotive (5)", "parent" : "MeanOfTransportation (22)" },
+{ "name" : "LunarCrater (4)", "parent" : "Crater (5)" },
+{ "name" : "Lymph (1)", "parent" : "AnatomicalStructure (13)" },
+{ "name" : "Magazine (10)", "parent" : "PeriodicalLiterature (24)" },
+{ "name" : "Mammal (14)", "parent" : "Animal (19)" },
+{ "name" : "Manga (4)", "parent" : "Comic (6)" },
+{ "name" : "Manhua (1)", "parent" : "Comic (6)" },
+{ "name" : "Manhwa (1)", "parent" : "Comic (6)" },
+{ "name" : "Marriage (0)", "parent" : "PersonalEvent (0)" },
+{ "name" : "MartialArtist (5)", "parent" : "Athlete (27)" },
+{ "name" : "MathematicalConcept (0)", "parent" : "TopicalConcept (16)" },
+{ "name" : "Mayor (3)", "parent" : "Politician (21)" },
+{ "name" : "MeanOfTransportation (22)", "parent" : "DBpediaClass" },
+{ "name" : "Media (0)", "parent" : "DBpediaClass" },
+{ "name" : "Medician (2)", "parent" : "Scientist (19)" },
+{ "name" : "Medicine (0)", "parent" : "DBpediaClass" },
+{ "name" : "Meeting (0)", "parent" : "SocietalEvent (24)" },
+{ "name" : "MemberOfParliament (1)", "parent" : "Politician (21)" },
+{ "name" : "MemberResistanceMovement (1)", "parent" : "Person (33)" },
+{ "name" : "Memorial (0)", "parent" : "Monument (5)" },
+{ "name" : "MetroStation (2)", "parent" : "Station (20)" },
+{ "name" : "MicroRegion (1)", "parent" : "GovernmentalAdministrativeRegion (10)" },
+{ "name" : "MilitaryAircraft (1)", "parent" : "Aircraft (18)" },
+{ "name" : "MilitaryConflict (23)", "parent" : "SocietalEvent (24)" },
+{ "name" : "MilitaryPerson (19)", "parent" : "Person (33)" },
+{ "name" : "MilitaryStructure (2)", "parent" : "ArchitecturalStructure (27)" },
+{ "name" : "MilitaryUnit (15)", "parent" : "Organisation (29)" },
+{ "name" : "MilitaryVehicle (1)", "parent" : "MeanOfTransportation (22)" },
+{ "name" : "Mill (2)", "parent" : "ArchitecturalStructure (27)" },
+{ "name" : "Mine (1)", "parent" : "Place (31)" },
+{ "name" : "Mineral (8)", "parent" : "ChemicalSubstance (19)" },
+{ "name" : "MixedMartialArtsEvent (2)", "parent" : "SportsEvent (19)" },
+{ "name" : "MixedMartialArtsLeague (1)", "parent" : "SportsLeague (12)" },
+{ "name" : "MobilePhone (0)", "parent" : "Device (21)" },
+{ "name" : "Model (10)", "parent" : "Person (33)" },
+{ "name" : "Mollusca (7)", "parent" : "Animal (19)" },
+{ "name" : "Monarch (14)", "parent" : "Person (33)" },
+{ "name" : "Monastery (3)", "parent" : "ReligiousBuilding (11)" },
+{ "name" : "Monument (5)", "parent" : "Place (31)" },
+{ "name" : "Mosque (2)", "parent" : "ReligiousBuilding (11)" },
+{ "name" : "Moss (5)", "parent" : "Plant (15)" },
+{ "name" : "MotocycleRacer (1)", "parent" : "MotorcycleRider (3)" },
+{ "name" : "MotorRace (1)", "parent" : "Race (5)" },
+{ "name" : "Motorcycle (1)", "parent" : "MeanOfTransportation (22)" },
+{ "name" : "MotorcycleRacingLeague (2)", "parent" : "SportsLeague (12)" },
+{ "name" : "MotorcycleRider (3)", "parent" : "MotorsportRacer (11)" },
+{ "name" : "MotorsportRacer (11)", "parent" : "Athlete (27)" },
+{ "name" : "MotorsportSeason (1)", "parent" : "SportsSeason (5)" },
+{ "name" : "Mountain (25)", "parent" : "NaturalPlace (29)" },
+{ "name" : "MountainPass (2)", "parent" : "NaturalPlace (29)" },
+{ "name" : "MountainRange (6)", "parent" : "NaturalPlace (29)" },
+{ "name" : "MouseGene (1)", "parent" : "Gene (1)" },
+{ "name" : "MouseGeneLocation (1)", "parent" : "GeneLocation (1)" },
+{ "name" : "MovieDirector (0)", "parent" : "Person (33)" },
+{ "name" : "MovieGenre (0)", "parent" : "Genre (15)" },
+{ "name" : "MovingImage (0)", "parent" : "Image (0)" },
+{ "name" : "MovingWalkway (0)", "parent" : "On-SiteTransportation (0)" },
+{ "name" : "MultiVolumePublication (1)", "parent" : "WrittenWork (29)" },
+{ "name" : "Municipality (6)", "parent" : "GovernmentalAdministrativeRegion (10)" },
+{ "name" : "Murderer (3)", "parent" : "Criminal (6)" },
+{ "name" : "Muscle (5)", "parent" : "AnatomicalStructure (13)" },
+{ "name" : "Museum (20)", "parent" : "Building (26)" },
+{ "name" : "MusicComposer (1)", "parent" : "Writer (22)" },
+{ "name" : "MusicDirector (1)", "parent" : "MusicalArtist (25)" },
+{ "name" : "MusicFestival (13)", "parent" : "SocietalEvent (24)" },
+{ "name" : "MusicGenre (15)", "parent" : "Genre (15)" },
+{ "name" : "Musical (5)", "parent" : "MusicalWork (28)" },
+{ "name" : "MusicalArtist (25)", "parent" : "Artist (28)" },
+{ "name" : "MusicalWork (28)", "parent" : "Work (31)" },
+{ "name" : "MythologicalFigure (1)", "parent" : "FictionalCharacter (17)" },
+{ "name" : "NCAATeamSeason (1)", "parent" : "SportsTeamSeason (4)" },
+{ "name" : "Name (4)", "parent" : "DBpediaClass" },
+{ "name" : "NarutoCharacter (1)", "parent" : "FictionalCharacter (17)" },
+{ "name" : "NascarDriver (1)", "parent" : "RacingDriver (10)" },
+{ "name" : "NationalAnthem (0)", "parent" : "MusicalWork (28)" },
+{ "name" : "NationalCollegiateAthleticAssociationAthlete (1)", "parent" : "Athlete (27)" },
+{ "name" : "NationalFootballLeagueEvent (2)", "parent" : "SportsEvent (19)" },
+{ "name" : "NationalFootballLeagueSeason (1)", "parent" : "FootballLeagueSeason (2)" },
+{ "name" : "NationalSoccerClub (1)", "parent" : "SoccerClub (25)" },
+{ "name" : "NaturalEvent (3)", "parent" : "Event (24)" },
+{ "name" : "NaturalPlace (29)", "parent" : "Place (31)" },
+{ "name" : "NaturalRegion (1)", "parent" : "Region (24)" },
+{ "name" : "Nerve (3)", "parent" : "AnatomicalStructure (13)" },
+{ "name" : "NetballPlayer (1)", "parent" : "Athlete (27)" },
+{ "name" : "Newspaper (18)", "parent" : "PeriodicalLiterature (24)" },
+{ "name" : "NobelPrize (0)", "parent" : "Award (13)" },
+{ "name" : "Noble (3)", "parent" : "Person (33)" },
+{ "name" : "NobleFamily (1)", "parent" : "Family (2)" },
+{ "name" : "Non-ProfitOrganisation (8)", "parent" : "Organisation (29)" },
+{ "name" : "NordicCombined (1)", "parent" : "WinterSportPlayer (15)" },
+{ "name" : "Novel (1)", "parent" : "Book (26)" },
+{ "name" : "NuclearPowerStation (1)", "parent" : "PowerStation (5)" },
+{ "name" : "Ocean (0)", "parent" : "BodyOfWater (25)" },
+{ "name" : "OfficeHolder (12)", "parent" : "Person (33)" },
+{ "name" : "OldTerritory (1)", "parent" : "Territory (2)" },
+{ "name" : "OlympicEvent (4)", "parent" : "Olympics (11)" },
+{ "name" : "OlympicResult (10)", "parent" : "SportCompetitionResult (10)" },
+{ "name" : "Olympics (11)", "parent" : "SportsEvent (19)" },
+{ "name" : "On-SiteTransportation (0)", "parent" : "MeanOfTransportation (22)" },
+{ "name" : "Openswarm (1)", "parent" : "Swarm (1)" },
+{ "name" : "Opera (3)", "parent" : "MusicalWork (28)" },
+{ "name" : "Organ (0)", "parent" : "Instrument (10)" },
+{ "name" : "Organisation (29)", "parent" : "Agent (33)" },
+{ "name" : "OrganisationMember (2)", "parent" : "Person (33)" },
+{ "name" : "Orphan (0)", "parent" : "Person (33)" },
+{ "name" : "OverseasDepartment (0)", "parent" : "Department (2)" },
+{ "name" : "PaintballLeague (0)", "parent" : "SportsLeague (12)" },
+{ "name" : "Painter (4)", "parent" : "Artist (28)" },
+{ "name" : "Painting (10)", "parent" : "Artwork (15)" },
+{ "name" : "Parish (1)", "parent" : "ClericalAdministrativeRegion (6)" },
+{ "name" : "Park (8)", "parent" : "Place (31)" },
+{ "name" : "Parliament (0)", "parent" : "Organisation (29)" },
+{ "name" : "PenaltyShootOut (1)", "parent" : "DBpediaClass" },
+{ "name" : "PeriodOfArtisticStyle (0)", "parent" : "TimePeriod (3)" },
+{ "name" : "PeriodicalLiterature (24)", "parent" : "WrittenWork (29)" },
+{ "name" : "Person (33)", "parent" : "Agent (33)" },
+{ "name" : "PersonFunction (2)", "parent" : "DBpediaClass" },
+{ "name" : "PersonalEvent (0)", "parent" : "LifeCycleEvent (0)" },
+{ "name" : "Philosopher (12)", "parent" : "Person (33)" },
+{ "name" : "PhilosophicalConcept (0)", "parent" : "TopicalConcept (16)" },
+{ "name" : "Photographer (1)", "parent" : "Artist (28)" },
+{ "name" : "Place (31)", "parent" : "DBpediaClass" },
+{ "name" : "Planet (14)", "parent" : "CelestialBody (22)" },
+{ "name" : "Plant (15)", "parent" : "Eukaryote (21)" },
+{ "name" : "Play (6)", "parent" : "WrittenWork (29)" },
+{ "name" : "PlayWright (0)", "parent" : "Writer (22)" },
+{ "name" : "PlayboyPlaymate (2)", "parent" : "Person (33)" },
+{ "name" : "Poem (2)", "parent" : "WrittenWork (29)" },
+{ "name" : "Poet (1)", "parent" : "Writer (22)" },
+{ "name" : "PokerPlayer (4)", "parent" : "Athlete (27)" },
+{ "name" : "PoliticalConcept (0)", "parent" : "TopicalConcept (16)" },
+{ "name" : "PoliticalFunction (1)", "parent" : "PersonFunction (2)" },
+{ "name" : "PoliticalParty (21)", "parent" : "Organisation (29)" },
+{ "name" : "Politician (21)", "parent" : "Person (33)" },
+{ "name" : "PoliticianSpouse (1)", "parent" : "Person (33)" },
+{ "name" : "PoloLeague (2)", "parent" : "SportsLeague (12)" },
+{ "name" : "Polyhedron (0)", "parent" : "DBpediaClass" },
+{ "name" : "Polysaccharide (0)", "parent" : "Biomolecule (10)" },
+{ "name" : "Pope (12)", "parent" : "Cleric (22)" },
+{ "name" : "PopulatedPlace (30)", "parent" : "Place (31)" },
+{ "name" : "Population (0)", "parent" : "DBpediaClass" },
+{ "name" : "Port (1)", "parent" : "Infrastructure (24)" },
+{ "name" : "PowerStation (5)", "parent" : "Infrastructure (24)" },
+{ "name" : "Prefecture (2)", "parent" : "GovernmentalAdministrativeRegion (10)" },
+{ "name" : "PrehistoricalPeriod (0)", "parent" : "TimePeriod (3)" },
+{ "name" : "Presenter (4)", "parent" : "Person (33)" },
+{ "name" : "President (12)", "parent" : "Politician (21)" },
+{ "name" : "Priest (3)", "parent" : "Cleric (22)" },
+{ "name" : "PrimeMinister (4)", "parent" : "Politician (21)" },
+{ "name" : "Prison (2)", "parent" : "Building (26)" },
+{ "name" : "Producer (0)", "parent" : "Person (33)" },
+{ "name" : "Profession (0)", "parent" : "PersonFunction (2)" },
+{ "name" : "Professor (1)", "parent" : "Scientist (19)" },
+{ "name" : "ProgrammingLanguage (9)", "parent" : "Software (22)" },
+{ "name" : "Project (1)", "parent" : "UnitOfWork (2)" },
+{ "name" : "ProtectedArea (8)", "parent" : "Place (31)" },
+{ "name" : "Protein (9)", "parent" : "Biomolecule (10)" },
+{ "name" : "ProtohistoricalPeriod (0)", "parent" : "TimePeriod (3)" },
+{ "name" : "Province (4)", "parent" : "GovernmentalAdministrativeRegion (10)" },
+{ "name" : "Psychologist (0)", "parent" : "Person (33)" },
+{ "name" : "PublicService (0)", "parent" : "DBpediaClass" },
+{ "name" : "PublicTransitSystem (4)", "parent" : "Organisation (29)" },
+{ "name" : "Publisher (3)", "parent" : "Company (26)" },
+{ "name" : "Pyramid (0)", "parent" : "ArchitecturalStructure (27)" },
+{ "name" : "Quote (0)", "parent" : "WrittenWork (29)" },
+{ "name" : "Race (5)", "parent" : "SportsEvent (19)" },
+{ "name" : "RaceHorse (2)", "parent" : "Horse (3)" },
+{ "name" : "RaceTrack (4)", "parent" : "SportFacility (18)" },
+{ "name" : "Racecourse (1)", "parent" : "RaceTrack (4)" },
+{ "name" : "RacingDriver (10)", "parent" : "MotorsportRacer (11)" },
+{ "name" : "RadioControlledRacingLeague (0)", "parent" : "SportsLeague (12)" },
+{ "name" : "RadioHost (1)", "parent" : "Presenter (4)" },
+{ "name" : "RadioProgram (4)", "parent" : "Work (31)" },
+{ "name" : "RadioStation (8)", "parent" : "Broadcaster (16)" },
+{ "name" : "RailwayLine (4)", "parent" : "RouteOfTransportation (20)" },
+{ "name" : "RailwayStation (5)", "parent" : "Station (20)" },
+{ "name" : "RailwayTunnel (2)", "parent" : "RouteOfTransportation (20)" },
+{ "name" : "RallyDriver (1)", "parent" : "RacingDriver (10)" },
+{ "name" : "Rebellion (1)", "parent" : "SocietalEvent (24)" },
+{ "name" : "RecordLabel (3)", "parent" : "Company (26)" },
+{ "name" : "RecordOffice (1)", "parent" : "Non-ProfitOrganisation (8)" },
+{ "name" : "Referee (3)", "parent" : "Person (33)" },
+{ "name" : "Reference (0)", "parent" : "Annotation (0)" },
+{ "name" : "Regency (1)", "parent" : "GovernmentalAdministrativeRegion (10)" },
+{ "name" : "Region (24)", "parent" : "PopulatedPlace (30)" },
+{ "name" : "Religious (3)", "parent" : "Person (33)" },
+{ "name" : "ReligiousBuilding (11)", "parent" : "Building (26)" },
+{ "name" : "ReligiousOrganisation (1)", "parent" : "Organisation (29)" },
+{ "name" : "Reptile (8)", "parent" : "Animal (19)" },
+{ "name" : "ResearchProject (1)", "parent" : "Project (1)" },
+{ "name" : "RestArea (1)", "parent" : "Infrastructure (24)" },
+{ "name" : "Restaurant (2)", "parent" : "Building (26)" },
+{ "name" : "Resume (0)", "parent" : "WrittenWork (29)" },
+{ "name" : "River (24)", "parent" : "Stream (25)" },
+{ "name" : "Road (18)", "parent" : "RouteOfTransportation (20)" },
+{ "name" : "RoadJunction (2)", "parent" : "RouteOfTransportation (20)" },
+{ "name" : "RoadTunnel (2)", "parent" : "RouteOfTransportation (20)" },
+{ "name" : "Rocket (3)", "parent" : "MeanOfTransportation (22)" },
+{ "name" : "RocketEngine (1)", "parent" : "Engine (3)" },
+{ "name" : "RollerCoaster (3)", "parent" : "AmusementParkAttraction (3)" },
+{ "name" : "RomanEmperor (1)", "parent" : "Person (33)" },
+{ "name" : "RouteOfTransportation (20)", "parent" : "Infrastructure (24)" },
+{ "name" : "RouteStop (0)", "parent" : "DBpediaClass" },
+{ "name" : "Rower (2)", "parent" : "Athlete (27)" },
+{ "name" : "Royalty (6)", "parent" : "Person (33)" },
+{ "name" : "RugbyClub (1)", "parent" : "SportsTeam (25)" },
+{ "name" : "RugbyLeague (2)", "parent" : "SportsLeague (12)" },
+{ "name" : "RugbyPlayer (5)", "parent" : "Athlete (27)" },
+{ "name" : "Saint (19)", "parent" : "Cleric (22)" },
+{ "name" : "Sales (1)", "parent" : "Activity (14)" },
+{ "name" : "SambaSchool (1)", "parent" : "Organisation (29)" },
+{ "name" : "Satellite (2)", "parent" : "CelestialBody (22)" },
+{ "name" : "School (17)", "parent" : "EducationalInstitution (26)" },
+{ "name" : "ScientificConcept (0)", "parent" : "TopicalConcept (16)" },
+{ "name" : "Scientist (19)", "parent" : "Person (33)" },
+{ "name" : "ScreenWriter (1)", "parent" : "Writer (22)" },
+{ "name" : "Sculptor (0)", "parent" : "Artist (28)" },
+{ "name" : "Sculpture (3)", "parent" : "Artwork (15)" },
+{ "name" : "Sea (3)", "parent" : "BodyOfWater (25)" },
+{ "name" : "Senator (2)", "parent" : "Politician (21)" },
+{ "name" : "SerialKiller (2)", "parent" : "Murderer (3)" },
+{ "name" : "Settlement (26)", "parent" : "PopulatedPlace (30)" },
+{ "name" : "Ship (14)", "parent" : "MeanOfTransportation (22)" },
+{ "name" : "ShoppingMall (5)", "parent" : "Building (26)" },
+{ "name" : "Shrine (1)", "parent" : "ArchitecturalStructure (27)" },
+{ "name" : "Singer (1)", "parent" : "MusicalArtist (25)" },
+{ "name" : "Single (21)", "parent" : "MusicalWork (28)" },
+{ "name" : "SiteOfSpecialScientificInterest (2)", "parent" : "Place (31)" },
+{ "name" : "Skater (2)", "parent" : "WinterSportPlayer (15)" },
+{ "name" : "SkiArea (2)", "parent" : "SportFacility (18)" },
+{ "name" : "SkiResort (1)", "parent" : "SkiArea (2)" },
+{ "name" : "Ski_jumper (1)", "parent" : "WinterSportPlayer (15)" },
+{ "name" : "Skier (5)", "parent" : "WinterSportPlayer (15)" },
+{ "name" : "Skyscraper (6)", "parent" : "Building (26)" },
+{ "name" : "SnookerChamp (2)", "parent" : "SnookerPlayer (5)" },
+{ "name" : "SnookerPlayer (5)", "parent" : "Athlete (27)" },
+{ "name" : "SnookerWorldRanking (1)", "parent" : "SportCompetitionResult (10)" },
+{ "name" : "SoapCharacter (1)", "parent" : "FictionalCharacter (17)" },
+{ "name" : "SoccerClub (25)", "parent" : "SportsTeam (25)" },
+{ "name" : "SoccerClubSeason (1)", "parent" : "SportsTeamSeason (4)" },
+{ "name" : "SoccerLeague (5)", "parent" : "SportsLeague (12)" },
+{ "name" : "SoccerLeagueSeason (2)", "parent" : "SportsTeamSeason (4)" },
+{ "name" : "SoccerManager (7)", "parent" : "SportsManager (8)" },
+{ "name" : "SoccerPlayer (25)", "parent" : "Athlete (27)" },
+{ "name" : "SoccerTournament (9)", "parent" : "Tournament (14)" },
+{ "name" : "SocietalEvent (24)", "parent" : "Event (24)" },
+{ "name" : "SoftballLeague (1)", "parent" : "SportsLeague (12)" },
+{ "name" : "Software (22)", "parent" : "Work (31)" },
+{ "name" : "SolarEclipse (1)", "parent" : "NaturalEvent (3)" },
+{ "name" : "Song (13)", "parent" : "MusicalWork (28)" },
+{ "name" : "SongWriter (0)", "parent" : "Writer (22)" },
+{ "name" : "Sound (1)", "parent" : "Document (1)" },
+{ "name" : "SpaceMission (8)", "parent" : "SocietalEvent (24)" },
+{ "name" : "SpaceShuttle (3)", "parent" : "MeanOfTransportation (22)" },
+{ "name" : "SpaceStation (3)", "parent" : "MeanOfTransportation (22)" },
+{ "name" : "Spacecraft (5)", "parent" : "MeanOfTransportation (22)" },
+{ "name" : "Species (22)", "parent" : "DBpediaClass" },
+{ "name" : "SpeedSkater (2)", "parent" : "WinterSportPlayer (15)" },
+{ "name" : "SpeedwayLeague (2)", "parent" : "SportsLeague (12)" },
+{ "name" : "SpeedwayRider (1)", "parent" : "MotorcycleRider (3)" },
+{ "name" : "SpeedwayTeam (2)", "parent" : "SportsTeam (25)" },
+{ "name" : "Sport (12)", "parent" : "Activity (14)" },
+{ "name" : "SportCompetitionResult (10)", "parent" : "DBpediaClass" },
+{ "name" : "SportFacility (18)", "parent" : "ArchitecturalStructure (27)" },
+{ "name" : "SportsClub (1)", "parent" : "Organisation (29)" },
+{ "name" : "SportsEvent (19)", "parent" : "SocietalEvent (24)" },
+{ "name" : "SportsLeague (12)", "parent" : "Organisation (29)" },
+{ "name" : "SportsManager (8)", "parent" : "Person (33)" },
+{ "name" : "SportsSeason (5)", "parent" : "DBpediaClass" },
+{ "name" : "SportsTeam (25)", "parent" : "Organisation (29)" },
+{ "name" : "SportsTeamMember (2)", "parent" : "OrganisationMember (2)" },
+{ "name" : "SportsTeamSeason (4)", "parent" : "SportsSeason (5)" },
+{ "name" : "Square (1)", "parent" : "ArchitecturalStructure (27)" },
+{ "name" : "SquashPlayer (2)", "parent" : "Athlete (27)" },
+{ "name" : "Stadium (16)", "parent" : "SportFacility (18)" },
+{ "name" : "Standard (1)", "parent" : "TopicalConcept (16)" },
+{ "name" : "Star (4)", "parent" : "CelestialBody (22)" },
+{ "name" : "State (1)", "parent" : "PopulatedPlace (30)" },
+{ "name" : "StatedResolution (1)", "parent" : "WrittenWork (29)" },
+{ "name" : "Station (20)", "parent" : "Infrastructure (24)" },
+{ "name" : "Statistic (1)", "parent" : "DBpediaClass" },
+{ "name" : "StillImage (0)", "parent" : "Image (0)" },
+{ "name" : "StormSurge (1)", "parent" : "NaturalEvent (3)" },
+{ "name" : "Stream (25)", "parent" : "BodyOfWater (25)" },
+{ "name" : "Street (1)", "parent" : "PopulatedPlace (30)" },
+{ "name" : "SubMunicipality (1)", "parent" : "GovernmentalAdministrativeRegion (10)" },
+{ "name" : "SumoWrestler (2)", "parent" : "Wrestler (6)" },
+{ "name" : "SupremeCourtOfTheUnitedStatesCase (1)", "parent" : "LegalCase (2)" },
+{ "name" : "Surfer (1)", "parent" : "Athlete (27)" },
+{ "name" : "Surname (1)", "parent" : "Name (4)" },
+{ "name" : "Swarm (1)", "parent" : "CelestialBody (22)" },
+{ "name" : "Swimmer (6)", "parent" : "Athlete (27)" },
+{ "name" : "Synagogue (1)", "parent" : "ReligiousBuilding (11)" },
+{ "name" : "SystemOfLaw (0)", "parent" : "TopicalConcept (16)" },
+{ "name" : "TableTennisPlayer (1)", "parent" : "Athlete (27)" },
+{ "name" : "Tax (1)", "parent" : "TopicalConcept (16)" },
+{ "name" : "Taxon (0)", "parent" : "TopicalConcept (16)" },
+{ "name" : "TeamMember (0)", "parent" : "Athlete (27)" },
+{ "name" : "TelevisionDirector (0)", "parent" : "Person (33)" },
+{ "name" : "TelevisionEpisode (11)", "parent" : "Work (31)" },
+{ "name" : "TelevisionHost (2)", "parent" : "Presenter (4)" },
+{ "name" : "TelevisionPersonality (0)", "parent" : "Person (33)" },
+{ "name" : "TelevisionSeason (4)", "parent" : "Work (31)" },
+{ "name" : "TelevisionShow (19)", "parent" : "Work (31)" },
+{ "name" : "TelevisionStation (14)", "parent" : "Broadcaster (16)" },
+{ "name" : "Temple (1)", "parent" : "ReligiousBuilding (11)" },
+{ "name" : "TennisLeague (1)", "parent" : "SportsLeague (12)" },
+{ "name" : "TennisPlayer (16)", "parent" : "Athlete (27)" },
+{ "name" : "TennisTournament (6)", "parent" : "Tournament (14)" },
+{ "name" : "TermOfOffice (0)", "parent" : "Organisation (29)" },
+{ "name" : "Territory (2)", "parent" : "PopulatedPlace (30)" },
+{ "name" : "Theatre (7)", "parent" : "Venue (7)" },
+{ "name" : "TheatreDirector (0)", "parent" : "Person (33)" },
+{ "name" : "TheologicalConcept (1)", "parent" : "TopicalConcept (16)" },
+{ "name" : "TimePeriod (3)", "parent" : "DBpediaClass" },
+{ "name" : "TopicalConcept (16)", "parent" : "DBpediaClass" },
+{ "name" : "Tournament (14)", "parent" : "SportsEvent (19)" },
+{ "name" : "Tower (4)", "parent" : "ArchitecturalStructure (27)" },
+{ "name" : "Town (5)", "parent" : "Settlement (26)" },
+{ "name" : "TrackList (2)", "parent" : "List (2)" },
+{ "name" : "TradeUnion (4)", "parent" : "Organisation (29)" },
+{ "name" : "Train (4)", "parent" : "MeanOfTransportation (22)" },
+{ "name" : "Treadmill (0)", "parent" : "Mill (2)" },
+{ "name" : "Tunnel (3)", "parent" : "ArchitecturalStructure (27)" },
+{ "name" : "Type (1)", "parent" : "TopicalConcept (16)" },
+{ "name" : "UndergroundJournal (0)", "parent" : "PeriodicalLiterature (24)" },
+{ "name" : "UnitOfWork (2)", "parent" : "DBpediaClass" },
+{ "name" : "University (23)", "parent" : "EducationalInstitution (26)" },
+{ "name" : "Unknown (1)", "parent" : "DBpediaClass" },
+{ "name" : "Valley (1)", "parent" : "NaturalPlace (29)" },
+{ "name" : "Vein (3)", "parent" : "AnatomicalStructure (13)" },
+{ "name" : "Venue (7)", "parent" : "ArchitecturalStructure (27)" },
+{ "name" : "Vicar (1)", "parent" : "Cleric (22)" },
+{ "name" : "VicePresident (1)", "parent" : "Politician (21)" },
+{ "name" : "VicePrimeMinister (0)", "parent" : "Politician (21)" },
+{ "name" : "VideoGame (20)", "parent" : "Software (22)" },
+{ "name" : "VideogamesLeague (1)", "parent" : "SportsLeague (12)" },
+{ "name" : "Village (6)", "parent" : "Settlement (26)" },
+{ "name" : "Vodka (1)", "parent" : "Beverage (8)" },
+{ "name" : "VoiceActor (3)", "parent" : "Actor (24)" },
+{ "name" : "Volcano (5)", "parent" : "NaturalPlace (29)" },
+{ "name" : "VolleyballCoach (1)", "parent" : "Coach (2)" },
+{ "name" : "VolleyballLeague (2)", "parent" : "SportsLeague (12)" },
+{ "name" : "VolleyballPlayer (8)", "parent" : "Athlete (27)" },
+{ "name" : "WaterPoloPlayer (1)", "parent" : "Athlete (27)" },
+{ "name" : "WaterRide (1)", "parent" : "AmusementParkAttraction (3)" },
+{ "name" : "WaterTower (1)", "parent" : "Tower (4)" },
+{ "name" : "Watermill (1)", "parent" : "Mill (2)" },
+{ "name" : "WaterwayTunnel (2)", "parent" : "RouteOfTransportation (20)" },
+{ "name" : "Weapon (15)", "parent" : "Device (21)" },
+{ "name" : "Website (19)", "parent" : "Work (31)" },
+{ "name" : "WindMotor (0)", "parent" : "Mill (2)" },
+{ "name" : "Windmill (2)", "parent" : "Mill (2)" },
+{ "name" : "Wine (1)", "parent" : "Beverage (8)" },
+{ "name" : "WineRegion (1)", "parent" : "Place (31)" },
+{ "name" : "Winery (1)", "parent" : "Company (26)" },
+{ "name" : "WinterSportPlayer (15)", "parent" : "Athlete (27)" },
+{ "name" : "WomensTennisAssociationTournament (2)", "parent" : "Tournament (14)" },
+{ "name" : "Work (31)", "parent" : "DBpediaClass" },
+{ "name" : "WorldHeritageSite (16)", "parent" : "Place (31)" },
+{ "name" : "Wrestler (6)", "parent" : "Athlete (27)" },
+{ "name" : "WrestlingEvent (1)", "parent" : "SportsEvent (19)" },
+{ "name" : "Writer (22)", "parent" : "Person (33)" },
+{ "name" : "WrittenWork (29)", "parent" : "Work (31)" },
+{ "name" : "Year (3)", "parent" : "TimePeriod (3)" },
+{ "name" : "YearInSpaceflight (1)", "parent" : "TimePeriod (3)" },
+{ "name" : "Zoo (3)", "parent" : "ArchitecturalStructure (27)" }
+    ];
+
+
+// *********** Convert flat data into a nice tree ***************
+// create a name: node map
+var dataMap = data.reduce(function(map, node) {
+	map[node.name] = node;
+	return map;
+}, {});
+
+// create the tree array
+var treeData = [];
+data.forEach(function(node) {
+	// add to parent
+	var parent = dataMap[node.parent];
+	if (parent) {
+		// create child array if it doesn't exist
+		(parent.children || (parent.children = []))
+			// add node to child array
+			.push(node);
+	} else {
+		// parent is null or missing
+		treeData.push(node);
+	}
+});
+
+// ************** Generate the tree diagram	 *****************
+var margin = {top: 20, right: 120, bottom: 20, left: 120},
+	width = 1600 - margin.right - margin.left,   //Original: 960 - margin.right - margin.left
+	height = 5500 - margin.top - margin.bottom; //Original: 500 - margin.top - margin.bottom;
+
+	
+var i = 0,
+    duration = 750,
+    root;
+
+var tree = d3.layout.tree()
+	.size([height, width]);
+
+var diagonal = d3.svg.diagonal()
+	.projection(function(d) { return [d.y, d.x]; });
+
+var svg = d3.select("body").append("svg")
+	.attr("width", width + margin.right + margin.left)
+	.attr("height", height + margin.top + margin.bottom)
+  .append("g")
+	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+root = treeData[0];
+root.x0 = height / 2;
+root.y0 = 0;
+
+  function collapse(d) {
+    if (d.children) {
+      d._children = d.children;
+      d._children.forEach(collapse);
+      d.children = null;
+    }
+  }
+
+  //root.children.forEach(collapse);
+  
+  update(root);
+
+  d3.select(self.frameElement).style("height", "800px");
+
+  function update(source) {
+
+	  // Compute the new tree layout.
+	  var nodes = tree.nodes(root).reverse(),
+		   links = tree.links(nodes);
+
+	  // Normalize for fixed-depth.
+	  nodes.forEach(function(d) { d.y = d.depth * 180; });
+
+	  // Update the nodes…
+	  var node = svg.selectAll("g.node")
+		   .data(nodes, function(d) { return d.id || (d.id = ++i); });
+
+	  // Enter any new nodes at the parent's previous position.
+	  var nodeEnter = node.enter().append("g")
+		   .attr("class", "node")
+		   .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+		   .on("click", click);
+
+	  nodeEnter.append("circle")
+		   .attr("r", 1e-6)
+		   .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+
+	  nodeEnter.append("text")
+		   .attr("x", function(d) { return d.children || d._children ? -10 : 10; })
+		   .attr("dy", ".35em")
+		   .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+		   .text(function(d) { return d.name; })
+		   .style("fill-opacity", 1e-6);
+
+	  // Transition nodes to their new position.
+	  var nodeUpdate = node.transition()
+		   .duration(duration)
+		   .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+
+	  nodeUpdate.select("circle")
+		   .attr("r", 4.5)
+		   .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+
+	  nodeUpdate.select("text")
+		   .style("fill-opacity", 1);
+
+	  // Transition exiting nodes to the parent's new position.
+	  var nodeExit = node.exit().transition()
+		   .duration(duration)
+		   .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+		   .remove();
+
+	  nodeExit.select("circle")
+		   .attr("r", 1e-6);
+
+	  nodeExit.select("text")
+		   .style("fill-opacity", 1e-6);
+
+	  // Update the links…
+	  var link = svg.selectAll("path.link")
+		   .data(links, function(d) { return d.target.id; });
+
+	  // Enter any new links at the parent's previous position.
+	  link.enter().insert("path", "g")
+		   .attr("class", "link")
+		   .attr("d", function(d) {
+		     var o = {x: source.x0, y: source.y0};
+		     return diagonal({source: o, target: o});
+		   });
+
+	  // Transition links to their new position.
+	  link.transition()
+		   .duration(duration)
+		   .attr("d", diagonal);
+
+	  // Transition exiting nodes to the parent's new position.
+	  link.exit().transition()
+		   .duration(duration)
+		   .attr("d", function(d) {
+		     var o = {x: source.x, y: source.y};
+		     return diagonal({source: o, target: o});
+		   })
+		   .remove();
+
+	  // Stash the old positions for transition.
+	  nodes.forEach(function(d) {
+		 d.x0 = d.x;
+		 d.y0 = d.y;
+	  });
+	}
+
+	// Toggle children on click.
+	function click(d) {
+	  if (d.children) {
+		 d._children = d.children;
+		 d.children = null;
+	  } else {
+		 d.children = d._children;
+		 d._children = null;
+	  }
+	  update(d);
+	}
+
+</script>
+
+<p> Developed with <a href="http://es.dbpedia.org/wiki/Wiki.jsp?page=Mostrando%20las%20clases%20de%20DBpedia">a script</a> from the Spanish DBpedia. Thank you <a href="https://twitter.com/marianorico">Mariano</a>! </p>
+	
+  </body>
+</html>
