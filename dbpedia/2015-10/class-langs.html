@@ -950,9 +950,10 @@ root.y0 = 0;
 		   .attr("r", 4.5)
         .style("fill", function(d) {
           if(d.count == 0) return "red";
-          if(d.count > 0 && d.count < 11 ) return "orange";
-          if(d.count > 10 && d.count < 21 ) return "yellow";
-          if(d.count > 21 ) return "green";
+          if(d.count == 1) return "orange";
+          if(d.count > 1 && d.count < 11 ) return "black";
+          if(d.count > 10 && d.count < 21 ) return "blue";
+          if(d.count > 20 ) return "green";
         });
 
 	  nodeUpdate.select("text")
