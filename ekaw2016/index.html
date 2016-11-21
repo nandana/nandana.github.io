@@ -39,9 +39,13 @@
       <div class="slides">
 	
         <section>
-          <h3><b>Data-Driven RDF Property </br> Semantic-Equivalence Detection </br> using NLP Techniques</b></h3>
+          <h2><b>Data-Driven RDF Property </br> Semantic-Equivalence Detection </br> using NLP Techniques</b></h2>
 	  <h5>Mariano Rico, <b>Nandana Mihindukulasooriya</b>, and Asunción Gómez Pérez </h5>
           <h5>Ontology Engineering Group, Universidad Politécnica de Madrid</h5>
+          <br/>
+          <br/>
+          <h5>Acknowledgments:<br/>
+              4V: Volumen, Velocidad, Variedad y Validez en la Gestin Innovadora de Datos</h5>
 	  <!--
           <h5>November 14<sup>th</sup>, 2016</h5>
           <h5>Wouter Beek</h5>
@@ -49,17 +53,18 @@
         </section>
 
 	<section>
-	  <h3>Motivation - DBpedia Use</h3>
+	  <h3>Motivation - DBpedia Use Case</h3>
 	  <img src="img/dbpedia.png">
 	</section>
 
 	<section>
 	  <h3>English DBpedia 2016-04</h3>
       <p>
-        <code>X out of 2848 are used!</code>
+        <code><b>1445</b> DBpedia ontology properties are used!</code>
       </p>
+        <p class="fragment">and when there is no mapping ...</p>
         <p class="fragment"> <span style="color: red">63891</span> auto-generated properties (Only English)</p>
-        <p class="fragment"> ~32 other language-specific DBpedia datasets</p>
+        <p class="fragment"> a lot more in each language-specific DBpedia datasets</p>
 	</section>
 
   <section>
@@ -93,7 +98,10 @@
               </div>
           </section>
 
-
+    <section>
+        <h3>What's their impact?</h3>
+        <img src="img/graph.jpg">
+    </section>
 
 	<section>
 	  <p>Let's make a query!</p>
@@ -120,11 +128,92 @@ select ?attraction where {
 
 
           <section>
-              <h2>How to detect property semantic-equivalences? </h2>
-              <div class="fragment"> <span style="color: red">63891</span> auto-generated properties (Only English)</div>
-              <div class="fragment"> ~32 other language-specific DBpedia datasets</div>
+              <h3>How to detect property semantic-equivalences? </h3>
+              <ul>
+                  <li class="fragment">
+                      <p>Structural characteristics</p>
+                      <ul><li>Domain and range.</li></ul>
+                  </li>
+                  <li class="fragment">
+                      <p>Linguistic characteristics</p>
+                      <ul>
+                          <li class="fragment">String similarity:
+                            <ul>
+                                <li>
+                                    String distance metrics (e.g Jaro-Winkler distance, Damerau-Levenshtein distance)
+                                </li>
+                                <li>
+                                    Token-based techniques (e.g. Jaccard similarity, Cosine Similarity)
+                                </li>
+                            </ul>
+                      </li>
+                      <li class="fragment">
+                                  Semantic Similarity
+                                  <ul>
+                                      <li>
+                                          Synonyms (e.g., synsets in WordNet)
+                                      </li>
+                                  </ul>
+                      </li>
+                      </ul>
+                  </li>
+              </ul>
 
           </section>
+
+          <section>
+              <h3>Our approach</h3>
+              <img style="height: 100%" src="img/apro.jpeg"/>
+          </section>
+
+
+          <section>
+              <h3>Enhanced Query</h3>
+              <pre>
+	    <code>
+PREFIX dbo: &lt;http://dbpedia.org/ontology/&gt;
+PREFIX dbp: &lt;http://dbpedia.org/property/&gt;
+
+select ?s ?bp  where {
+ ?s ?p ?bp .
+ VALUES ?p {
+  #Alternative dbp properties
+  dbp:birthPlace
+  dbp:birthPlcace dbp:birthplace  birthLocation
+  dbp:birhPlace   dbp:bithPlace   cityofbirth
+  dbp:birtPlace   dbp:biRthPlace  cityOfBirth 
+ }
+}
+            </code>
+          </pre>
+          </section>
+
+
+          <section>
+              <h3>Evaluation</h3>
+              <ul>
+                  <li>Datasets: English, Spanish, German DBpedia datasets</li>
+                  <li>Queries: Query logs from Linked SPARQL Queries Dataset</li>
+                  <li>Analysis: Number of results before and after the enhancement</li>
+                  <li>Results were improved in most cases upto 300%</li>
+                  <li>Impact on quality of the results to be analyzed</li>
+              </ul>
+          </section>
+
+
+          <section>
+              <h3>Conclusions</h3>
+              <ul>
+                  <li>A lot of redundant properties in DBpedia.
+                      <ul>
+                          <li>Neither Wikipedia (Infobox keys) nor the extraction process (missing mappings) is perfect.</li>
+                      </ul>
+                  </li>
+                  <li>Low usage of such properties lead to incomplete answers in SPARQL queries.</li>
+                  <li>Results can be improved by enhancing SPARQL queries with semantically-equivalent properties.</li>
+              </ul>
+          </section>
+
 	
         <section>
           <h1>Thank you!</h1>
