@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Data-Driven RDF Property Semantic-Equivalence Detection using NLP Techniques</title>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+      tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+      }
+      });
+    </script>
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <meta name="description" content="EKAW2016">
+    <meta name="author" content="Nandana Mihindukulasooriya">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/solarized.css" id="theme">
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+    <!--[if lt IE 9]>
+        <script src="lib/js/html5shiv.js"></script>
+        <![endif]-->
+    <link rel="stylesheet" href="css/custom.css">
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+	
+        <section>
+          <h3><b>Data-Driven RDF Property </br> Semantic-Equivalence Detection </br> using NLP Techniques</b></h3>
+	  <h5>Mariano Rico, <b>Nandana Mihindukulasooriya</b>, and Asunción Gómez Pérez </h5>
+          <h5>Ontology Engineering Group, Universidad Politécnica de Madrid</h5>
+	  <!--
+          <h5>November 14<sup>th</sup>, 2016</h5>
+          <h5>Wouter Beek</h5>
+	  -->
+        </section>
+
+	<section>
+	  <h3>Motivation - DBpedia Use</h3>
+	  <img src="img/dbpedia.png">
+	</section>
+
+	<section>
+	  <h3>English DBpedia 2016-04</h3>
+      <p>
+        <code>X out of 2848 are used!</code>
+      </p>
+        <p class="fragment"> <span style="color: red">63891</span> auto-generated properties (Only English)</p>
+        <p class="fragment"> ~32 other language-specific DBpedia datasets</p>
+	</section>
+
+  <section>
+      <h3>dbo:birthPlace relation</h3>
+      <h4>Similar strings - capitalization, typos, prepositions, ... </h4>
+      <div style="position:relative; width:640px; height:480px; margin:0 auto;">
+          <img width="640" height="480" src="img/1.png" style="position:absolute;top:0;left:0;" />
+      </div>
+  </section>
+
+          <section>
+              <h3>dbo:birthPlace relation</h3>
+              <h4>Synonyms, related words </h4>
+              <div style="position:relative; width:640px; height:480px; margin:0 auto;">
+                  <div style="position:relative; width:640px; height:480px; margin:0 auto;">
+                      <img class="fragment fade-out" data-fragment-index="0" width="640" height="480" src="img/1.png" style="position:absolute;top:0;left:0;" />
+                      <img class="fragment fade-in" data-fragment-index="0" width="640" height="480" src="img/2.png" style="position:absolute;top:0;left:0;" />
+                  </div>
+              </div>
+          </section>
+
+
+          <section>
+              <h3>dbo:birthPlace relation</h3>
+              <h4>Other languages</h4>
+              <div style="position:relative; width:640px; height:480px; margin:0 auto;">
+                  <div style="position:relative; width:640px; height:480px; margin:0 auto;">
+                      <img class="fragment fade-out" data-fragment-index="0" width="640" height="480" src="img/2.png" style="position:absolute;top:0;left:0;" />
+                      <img class="fragment fade-in" data-fragment-index="0" width="640" height="480" src="img/3.png" style="position:absolute;top:0;left:0;" />
+                  </div>
+              </div>
+          </section>
+
+
+
+	<section>
+	  <p>Let's make a query!</p>
+
+      <p style="text-align: left">Dear DBpedia, please tell me the landmarks and buildings where Guglielmo Marconi was born.</p>
+	  <pre>
+	    <code>
+select ?attraction where {
+      dbr:Guglielmo_Marconi  dbo:birthPlace ?place .
+
+      ?attraction a schema:LandmarksOrHistoricalBuildings;
+                dbo:location ?place .
+    }
+            </code>
+          </pre>
+	</section>
+
+
+          <section>
+              <h2>Hypothesis</h2>
+              <p>If we can detect RDF property semantic-equivalences, SPARQL queries can be enhanced to get better results!</p>
+
+          </section>
+
+
+          <section>
+              <h2>How to detect property semantic-equivalences? </h2>
+              <div class="fragment"> <span style="color: red">63891</span> auto-generated properties (Only English)</div>
+              <div class="fragment"> ~32 other language-specific DBpedia datasets</div>
+
+          </section>
+	
+        <section>
+          <h1>Thank you!</h1>
+          <p>Mail: <a href="mailto:nmihindu@fi.upm.es">nmihindu@fi.upm.es</a></p>
+          <p>Twitter: <a href="http://twitter.com/nandanamihindu">@nandanamihindu</a></p>
+        </section>
+        
+      </div>
+    </div>
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+    <script>
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+      controls: true,
+      progress: true,
+      history: true,
+      center: true,
+      transition: 'slide', // none/fade/slide/convex/concave/zoom
+      // Optional reveal.js plugins
+      dependencies: [
+      { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+      { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+      { src: 'plugin/zoom-js/zoom.js', async: true },
+      { src: 'plugin/notes/notes.js', async: true }
+      ]
+      });
+    </script>
+    <script async src="//platform.twitter.com/widgets.js" charset="utf-8">
+    </script>
+    <script>
+      window.twttr = (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0],
+      t = window.twttr || {};
+      if (d.getElementById(id)) return t;
+      js = d.createElement(s);
+      js.id = id;
+      js.src = "https://platform.twitter.com/widgets.js";
+      fjs.parentNode.insertBefore(js, fjs);
+      t._e = [];
+      t.ready = function(f) {
+      t._e.push(f);
+      };
+      return t;
+      }(document, "script", "twitter-wjs"));
+    </script>
+  </body>
+</html>
+
