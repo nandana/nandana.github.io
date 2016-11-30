@@ -33,6 +33,26 @@
         <script src="lib/js/html5shiv.js"></script>
         <![endif]-->
     <link rel="stylesheet" href="css/custom.css">
+    <style type="text/css">
+    /* 1. Style header/footer <div> so they are positioned as desired. */
+    #header-left {
+        position: absolute;
+        top: 0%;
+        left: 0%;
+    }
+    #header-right {
+        position: absolute;
+        top: 0%;
+        right: 0%;
+    }
+    #footer-left {
+        position: absolute;
+        bottom: 0%;
+        left: 0%;
+    }
+   </style>  
+      
+      
   </head>
   <body>
     <div class="reveal">
@@ -51,7 +71,7 @@
         <h3>Current State</h3>
         <div style="height = 100%">
         <ul>
-            <li class="fragment">Datasets
+            <li>Datasets
                 <ul>
                     <li><a href="http://linkeddatacatalog.dws.informatik.uni-mannheim.de/state/#toc0">LOD Cloud crawled data</a>(900K+ documents)</li>
                     <li><a href="http://lodlaundromat.org/wardrobe/">LOD Laundromat + LDF endpoints (658K+ datasets)</a></li>
@@ -61,7 +81,7 @@
             </li>
         </ul>
         <ul>
-            <li class="fragment">Dataset descriptions
+            <li>Dataset descriptions
                 <ul>
                     <li>Generic - DCMI, DCAT</li>
                     <li>RDF - VoID, Aether VoID extension, HCLS Distribution Level Description, LODStats, RDFStats, ProLOD++,ExpLOD, ABSTAT</li>
@@ -69,7 +89,7 @@
             </li>
         </ul>
         <ul>
-          <li class="fragment">Dataset searches
+          <li>Dataset searches
                 <ul>
                     <li>datahub, lodsearch.org, Sindice, Semplore, VisiNav, Semantic Sitemaps, DING!, ...</li>
                 </ul>
@@ -80,7 +100,7 @@
           
 	<section>
 	  <h3>Motivation</h3>
-      <h3>Use Case I - Dataset discovery</h3>    
+      <h4>Use Case I - Dataset discovery</h4>    
         
         <p></p>
   
@@ -104,7 +124,7 @@
     <section>
         <h3>Use Case I - Example</h3>
         <ul>
-           <li>I want to train a classifier that labels restaurants with their cuisine based on the restaurant's description. </li> 
+           <li>I want to find training data for a classifier that categorizes restaurants according their cuisine based on the restaurant's description. </li> 
         </ul>
         <div class="fragment left">    
               <pre>
@@ -138,15 +158,111 @@ ex:RestaurantShape a sh:Shape ;
             <p style="text-align: center">Shape (SHACL)</p>
         </div>           
     </section>      
+          
+	<section>
+	  <h3>Motivation</h3>
+      <h4>Use Case II - Vocabulary Usage Reports</h4>    
+        
+        <p></p>
+  
+        <ul>
+          <li class="fragment">
+            <span style="color: green;">As an </span> ontology engineer / vocabulary developer  
+          </li>
+          <li class="fragment">
+              <span style="color: green;">I want to </span> <b>know how my vocabulary is used</b> in datasets in practice
+          </li>
+          <li class="fragment">
+            <span style="color: green;">so that I </span> can <b>understand mismatches or problems</b> and improve it. 
+          </li>   
+        </ul>
+	</section> 
+          
+    <section>
+        <h3>Use Case II - Example</h3>
+        <ul>
+          <li>Given an ontology (e.g., SSN Ontology)</li>
+          <li class="fragment">Where is it used
+             <ul>
+               <li>How many datasets / instances use each class?</li>
+               <li>How many datasets / triples use each property?</li>     
+             </ul>
+          </li>
+          <li class="fragment"> How is it used
+            <ul>
+                <li>What are the other classes used with instances of each class?</li>
+                <li>What are the common subject types of each property?</li>
+                <li>What are the common object types of each property?</li>
+                <li>Do people use my vocabulary terms in a more generic/specific way?</li>
+                <li>Do people replace part of ontology with another one?</li>
+                <li>Do people frequently violate some restrictions?</li>
+            </ul>
+          </li>   
+        </ul>    
+    </section>      
+                  
+            
+            
+            
+          
+          
 
  <section>
     	  <h3>Motivation - Contd.</h3>
      <ul>
         <li>As an RDF dataset consumer, I want to <b>understand the content and the structure of a dataset</b> so that I can start using it or perform queries without spending hours doing exploratory queries.</li>
         <li>As an RDF dataset consumer / producer, I want to <b>compare datasets</b> (different datasets or multiple versions of the same dataset) so that I can understand the differences and changes.</li>
-        <li>As an Ontology Engineer, I want to get <b>analyze on how my vocabulary is used</b> in practice in datasets so that I can mismatches and improve it.</li>
      </ul>      
-</section>    
+</section> 
+          
+<section>
+     <h2>Can we extend dataset descriptions by expressing <span style="color: blue;">vocabulary usage patterns?</span></h2>              
+</section>
+          
+<section>
+    <h3>Vocabulary Usage Patterns</h3>
+    
+    <ul>
+       <li>An implict schema (shapes) for a given dataset</li>    
+       <li class="fragment"><b>Class analysis</b> 
+           <ul>
+               <li>
+               # of instances, associated properties with their cardinalities, equivalent/super classes 
+               </li>
+           </ul>
+        </li>
+        <li class="fragment">
+           <b>Property analysis</b>
+            <ul>
+               <li>
+               # of triples, estimated domains / ranges, value ranges/patterns for data type properties 
+               </li>
+           </ul>           
+        </li>
+        <li class="fragment">
+           <b>Abstract triple pattern analysis</b>
+            <img src="img/atp.png"  />        
+        </li>
+        <li class="fragment">
+           <b>Language analysis</b> for strings
+        </li>
+    
+    
+    </ul>
+          
+</section>          
+          
+    <section>
+        <h3>Loupe Model</h3>      
+        <img src="img/model.png"/> 
+        <p>An excerpt from the Loupe model</p>
+    </section> 
+          
+    <section>
+        <h3>Implementation</h3>      
+        <img src="img/arch.png"/> 
+        <p>Loupe tool chain</p>
+    </section>          
           
 	
         <section>
@@ -157,6 +273,15 @@ ex:RestaurantShape a sh:Shape ;
         
       </div>
     </div>
+      
+    <div id="hidden" style="display:none;">
+    <div id="header">
+        <div id="header-left"></div>
+        <div id="header-right"><img src="img/upm-oeg.jpg"  /></div>
+        <div id="footer-left"></div>
+    </div>
+    </div>
+  
     <script src="lib/js/head.min.js"></script>
     <script src="js/reveal.js"></script>
     <script>
@@ -197,6 +322,20 @@ ex:RestaurantShape a sh:Shape ;
       return t;
       }(document, "script", "twitter-wjs"));
     </script>
+      
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript">
+    // 3. On Reveal.js ready event, copy header/footer <div> into each `.slide-background` <div>
+    var header = $('#header').html();
+    if ( window.location.search.match( /print-pdf/gi ) ) {
+        Reveal.addEventListener( 'ready', function( event ) {
+            $('.slide-background').append(header);
+        });
+    }
+    else {
+        $('div.reveal').append(header);
+   }
+    </script>  
   </body>
 </html>
 
