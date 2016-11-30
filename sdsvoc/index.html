@@ -124,11 +124,11 @@
     <section>
         <h3>Use Case I - Example</h3>
         <ul>
-           <li>I want to find training data for a classifier that categorizes restaurants according their cuisine based on the restaurant's description. </li> 
+           <li>I want to find training data for a classifier that categorizes <b>restaurants</b> according their <b>cuisine</b> based on the restaurant's <b>description</b>. </li> 
         </ul>
         <div class="fragment left">    
               <pre>
-	    <code style="font-size: 70%;">PREFIX schema: &lt;http://shema.org/&gt;
+	    <code style="font-size: 70%;">PREFIX schema: &lt;http://schema.org/&gt;
 
 select ?restaurant ?description ?cusine  where {
  ?restaurant a schema:Restaurant;
@@ -140,7 +140,7 @@ select ?restaurant ?description ?cusine  where {
         </div>
         <div class="fragment right">    
               <pre>
-	    <code style="font-size: 70%;">@prefix schema: &lt;http://shema.org/&gt; .
+	    <code style="font-size: 70%;">@prefix schema: &lt;http://schema.org/&gt; .
 @prefix ex: &lt;http://example.org/vocab> .
 @prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .
 
