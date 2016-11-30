@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Loupe - An RDF Dataset Description Model for Expressing Vocabulary Usage Patterns</title>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+      tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+      }
+      });
+    </script>
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <meta name="description" content="EKAW2016">
+    <meta name="author" content="Nandana Mihindukulasooriya">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/solarized.css" id="theme">
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+    <!--[if lt IE 9]>
+        <script src="lib/js/html5shiv.js"></script>
+        <![endif]-->
+    <link rel="stylesheet" href="css/custom.css">
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+	
+        <section>
+          <h2>An RDF Dataset Description Model <br/>for Expressing Vocabulary Usage Patterns</h2>
+          <img src="img/loupe.png" style="background : 0; margin : 0; border : 0; box-shadow : none;" />   
+	      <h5><b>Nandana Mihindukulasooriya</b>, María Poveda-Villalón, Raúl García-Castro, Asunción Gómez-Pérez </h5>
+          <h5>Ontology Engineering Group, Universidad Politécnica de Madrid</h5>
+          <h5>Acknowledgments:<br/>
+              4V: Volumen, Velocidad, Variedad y Validez en la Gestión Innovadora de Datos</h5>
+        </section>
+
+    <section>
+        <h3>Current State</h3>
+        <div style="height = 100%">
+        <ul>
+            <li class="fragment">Datasets
+                <ul>
+                    <li><a href="http://linkeddatacatalog.dws.informatik.uni-mannheim.de/state/#toc0">LOD Cloud crawled data</a>(900K+ documents)</li>
+                    <li><a href="http://lodlaundromat.org/wardrobe/">LOD Laundromat + LDF endpoints (658K+ datasets)</a></li>
+                    <li><a href="https://datahub.io/dataset?q=rdf">datahub /w rdf</a> (1792 datasets)</li>
+                    <li><a href="http://lod.openlinksw.com/sparql/">OpenLink Software LOD Cache</a></li>
+                </ul>
+            </li>
+        </ul>
+        <ul>
+            <li class="fragment">Dataset descriptions
+                <ul>
+                    <li>Generic - DCMI, DCAT</li>
+                    <li>RDF - VoID, Aether VoID extension, HCLS Distribution Level Description, LODStats, RDFStats, ProLOD++,ExpLOD, ABSTAT</li>
+                </ul>
+            </li>
+        </ul>
+        <ul>
+          <li class="fragment">Dataset searches
+                <ul>
+                    <li>datahub, lodsearch.org, Sindice, Semplore, VisiNav, Semantic Sitemaps, DING!, ...</li>
+                </ul>
+            </li>
+        </ul>
+        </div>
+    </section>
+          
+	<section>
+	  <h3>Motivation</h3>
+      <h3>Use Case I - Dataset discovery</h3>    
+        
+        <p></p>
+  
+        <ul>
+          <li class="fragment">
+            <span style="color: green;">As an </span> RDF <b>data consumer</b> 
+          </li>
+          <li class="fragment">
+              <span style="color: green;">I want to </span> <b>discover datasets that satisfy the requirements of a given task</b> 
+              <ul>
+                  <li>Input: keywords, SPARQL query, Shapes (SHACL, ShEx)</li>
+                  <li>Output: relevant datasets</li>
+              </ul>
+          </li>
+          <li class="fragment">
+            <span style="color: green;">so that I </span> can <b>use data from the LOD cloud </b> without spending days for manual inspection. 
+          </li>   
+        </ul>
+	</section>
+          
+    <section>
+        <h3>Use Case I - Example</h3>
+        <ul>
+           <li>I want to train a classifier that labels restaurants with their cuisine based on the restaurant's description. </li> 
+        </ul>
+        <div class="fragment left">    
+              <pre>
+	    <code style="font-size: 70%;">PREFIX schema: &lt;http://shema.org/&gt;
+
+select ?restaurant ?description ?cusine  where {
+ ?restaurant a schema:Restaurant;
+     schema:description ?description;
+     schema:servesCuisine ?cusine .
+}</code>
+          </pre>
+            <p style="text-align: center">SPARQL Query</p>
+        </div>
+        <div class="fragment right">    
+              <pre>
+	    <code style="font-size: 70%;">@prefix schema: &lt;http://shema.org/&gt; .
+@prefix ex: &lt;http://example.org/vocab> .
+@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .
+
+ex:RestaurantShape a sh:Shape ;
+	sh:targetClass schema:Restaurant;
+	sh:property [
+		sh:predicate schema:description;
+		sh:minCount 1 ;
+	];
+	sh:property [
+		sh:predicate schema:servesCuisine;
+		sh:minCount 1 ;
+	] .</code>
+          </pre>
+            <p style="text-align: center">Shape (SHACL)</p>
+        </div>           
+    </section>      
+
+ <section>
+    	  <h3>Motivation - Contd.</h3>
+     <ul>
+        <li>As an RDF dataset consumer, I want to <b>understand the content and the structure of a dataset</b> so that I can start using it or perform queries without spending hours doing exploratory queries.</li>
+        <li>As an RDF dataset consumer / producer, I want to <b>compare datasets</b> (different datasets or multiple versions of the same dataset) so that I can understand the differences and changes.</li>
+        <li>As an Ontology Engineer, I want to get <b>analyze on how my vocabulary is used</b> in practice in datasets so that I can mismatches and improve it.</li>
+     </ul>      
+</section>    
+          
+	
+        <section>
+          <h1>Thank you!</h1>
+          <p>Mail: <a href="mailto:nmihindu@fi.upm.es">nmihindu@fi.upm.es</a></p>
+          <p>Twitter: <a href="http://twitter.com/nandanamihindu">@nandanamihindu</a></p>
+        </section>
+        
+      </div>
+    </div>
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+    <script>
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+      controls: true,
+      progress: true,
+      history: true,
+      center: true,
+      transition: 'slide', // none/fade/slide/convex/concave/zoom
+      // Optional reveal.js plugins
+      dependencies: [
+      { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+      { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+      { src: 'plugin/zoom-js/zoom.js', async: true },
+      { src: 'plugin/notes/notes.js', async: true }
+      ]
+      });
+    </script>
+    <script async src="//platform.twitter.com/widgets.js" charset="utf-8">
+    </script>
+    <script>
+      window.twttr = (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0],
+      t = window.twttr || {};
+      if (d.getElementById(id)) return t;
+      js = d.createElement(s);
+      js.id = id;
+      js.src = "https://platform.twitter.com/widgets.js";
+      fjs.parentNode.insertBefore(js, fjs);
+      t._e = [];
+      t.ready = function(f) {
+      t._e.push(f);
+      };
+      return t;
+      }(document, "script", "twitter-wjs"));
+    </script>
+  </body>
+</html>
+
