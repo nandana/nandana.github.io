@@ -39,17 +39,13 @@
       <div class="slides">
 	
         <section>
-          <h2><b>Data-Driven RDF Property </br> Semantic-Equivalence Detection </br> using NLP Techniques</b></h2>
+          <h2>Data-Driven RDF Property <br/> Semantic-Equivalence Detection <br/> using NLP Techniques</h2>
 	  <h5>Mariano Rico, <b>Nandana Mihindukulasooriya</b>, and Asunción Gómez Pérez </h5>
           <h5>Ontology Engineering Group, Universidad Politécnica de Madrid</h5>
           <br/>
           <br/>
           <h5>Acknowledgments:<br/>
               4V: Volumen, Velocidad, Variedad y Validez en la Gestin Innovadora de Datos</h5>
-	  <!--
-          <h5>November 14<sup>th</sup>, 2016</h5>
-          <h5>Wouter Beek</h5>
-	  -->
         </section>
 
 	<section>
@@ -223,6 +219,17 @@ select ?s ?bp  where {
         
       </div>
     </div>
+
+    <div id="hidden" style="display:none;">
+        <div id="header">
+            <div id="header-left"></div>
+            <div id="header-right">
+                <a href="http://www.oeg-upm.net/"><img src="img/upm-oeg.jpg" /></a>
+            </div>
+            <div id="footer-left"></div>
+        </div>
+    </div>
+
     <script src="lib/js/head.min.js"></script>
     <script src="js/reveal.js"></script>
     <script>
@@ -263,6 +270,20 @@ select ?s ?bp  where {
       return t;
       }(document, "script", "twitter-wjs"));
     </script>
+
+    <script src="js/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript">
+    // 3. On Reveal.js ready event, copy header/footer <div> into each `.slide-background` <div>
+    var header = $('#header').html();
+    if ( window.location.search.match( /print-pdf/gi ) ) {
+        Reveal.addEventListener( 'ready', function( event ) {
+            $('.slide-background').append(header);
+        });
+    }
+    else {
+        $('div.reveal').append(header);
+   }
+    </script>  
   </body>
 </html>
 
