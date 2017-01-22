@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Loupe - An RDF Dataset Description Model for Expressing Vocabulary Usage Patterns</title>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+      tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+      }
+      });
+    </script>
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <meta name="description" content="Slides for W3C Smart Descriptions & Smarter Vocabularies (SDSVoc)">
+    <meta name="keywords" content="RDF, Dataset, Description, Loupe, Discovery, Quality">  
+    <meta name="author" content="Nandana Mihindukulasooriya">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/solarized.css" id="theme">
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+    <!--[if lt IE 9]>
+        <script src="lib/js/html5shiv.js"></script>
+        <![endif]-->
+    <link rel="stylesheet" href="css/custom.css">
+    <style type="text/css">
+    /* 1. Style header/footer <div> so they are positioned as desired. */
+    #header-left {
+        position: absolute;
+        top: 0%;
+        left: 0%;
+    }
+    #header-right {
+        position: absolute;
+        top: 0%;
+        right: 0%;
+    }
+    #footer-left {
+        position: absolute;
+        bottom: 0%;
+        left: 0%;
+    }
+   </style>  
+      
+      
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+	
+        <section>
+          <h2>An RDF Dataset Description Model <br/>for Expressing Data Profile Patterns</h2>
+          <a href="http://loupe.linkeddata.es/"><img src="img/loupe.png" style="background : 0; margin : 0; border : 0; box-shadow : none;" /> </a>  
+	      <h5><b>Nandana Mihindukulasooriya</b>, María Poveda-Villalón, Raúl García-Castro, Asunción Gómez-Pérez </h5>
+          <h5>Ontology Engineering Group, Universidad Politécnica de Madrid</h5>
+          <h5>Acknowledgments:<br/>
+              4V: Volumen, Velocidad, Variedad y Validez en la Gestión Innovadora de Datos</h5>
+        </section>
+
+    <section>
+        <h3>Current State</h3>
+        <div style="height = 100%">
+            <ul>
+            <ul>
+                <li>Datasets
+                    <ul>
+                        <li>CKAN repos (<a href="https://datahub.io/dataset?q=rdf">datahub.io</a>, <a href="https://publicdata.eu/">publicdata.eu</a>, etc.)</li>
+                        <li><a href="http://linkeddatacatalog.dws.informatik.uni-mannheim.de/state/#toc0">LOD Cloud crawled data</a> (900K+ documents)</li>
+                        <li><a href="http://lodlaundromat.org/wardrobe/">LOD Laundromat + LDF endpoints (658K+ datasets)</a></li>
+                        <li><a href="http://lod.openlinksw.com/sparql/">Linghub (175 datasets), LOD Cache</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul>
+                <li>Dataset descriptions
+                    <ul>
+                        <li>Generic - <a href="http://dublincore.org/">DCMI</a>, <a href="https://www.w3.org/TR/vocab-dcat/">DCAT</a></li>
+                        <li>RDF - <a href="https://www.w3.org/TR/void/">VoID</a>, <a href="http://ldf.fi/void-ext">Aether VoID extension</a>, <a href="https://www.w3.org/TR/hcls-dataset/">HCLS Distribution Level Description</a>, <a href="http://stats.lod2.eu/">LODStats</a>, <a href="http://rdfstats.sourceforge.net/">RDFStats</a>, <a href="https://hpi.de/naumann/projects/data-profiling-and-analytics/prolod.html">ProLOD++</a>,<a href="http://link.springer.com/chapter/10.1007%2F978-3-642-13489-0_19#page-1">ExpLOD</a>, <a href="http://abstat.disco.unimib.it:8880/">ABSTAT</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul>
+              <li>Dataset searche engines
+                    <ul>
+                        <li><a href="https://datahub.io/">datahub</a>, <a href="http://lodsearch.org/">lodsearch.org</a>, <a href="http://www.sindice.com/">Sindice</a>, <a href="http://www.sciencedirect.com/science/article/pii/S1570826809000262">Semplore</a>, <a href="http://www.sciencedirect.com/science/article/pii/S1570826810000600">VisiNav</a>, <a href="http://www.renaud.delbru.fr/doc/pub/eswc2008-sitemap.pdf">Semantic Sitemaps</a>, DING!, ...</li>
+                    </ul>
+                </li>
+            </ul>
+            </ul>    
+        </div>
+    </section>
+          
+	<section>
+	  <h3>Motivation</h3>
+      <h4>Use Case I - Dataset discovery</h4>    
+        
+        <p></p>
+  
+        <ul>
+          <li class="fragment">
+            <span style="color: green;">As an </span> RDF <b>data consumer</b> 
+          </li>
+          <li class="fragment">
+              <span style="color: green;">I want to </span> <b>discover datasets that satisfy the requirements of a given task</b> 
+              <ul>
+                  <li>Input: keywords, SPARQL query, Shapes (SHACL, ShEx)</li>
+                  <li>Output: relevant datasets</li>
+              </ul>
+          </li>
+          <li class="fragment">
+            <span style="color: green;">so that I </span> can <b>use data from the LOD cloud </b> without spending days of manual inspection. 
+          </li>   
+        </ul>
+	</section>
+          
+    <section>
+        <h3>Use Case I - Example</h3>
+        <ul>
+           <li>I want to find training data for a ML classifier that categorizes <b>restaurants</b> according their <b>cuisine</b> based on the restaurant's <b>description</b>. </li> 
+        </ul>
+        <div class="fragment left">    
+              <pre>
+	    <code style="font-size: 70%;">PREFIX schema: &lt;http://schema.org/&gt;
+
+select ?restaurant ?description ?cusine  where {
+ ?restaurant a schema:Restaurant;
+     schema:description ?description;
+     schema:servesCuisine ?cusine .
+}</code>
+          </pre>
+            <p style="text-align: center">SPARQL Query</p>
+        </div>
+        <div class="fragment right">    
+              <pre>
+	    <code style="font-size: 70%;">@prefix schema: &lt;http://schema.org/&gt; .
+@prefix ex: &lt;http://example.org/vocab> .
+@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .
+
+ex:RestaurantShape a sh:Shape ;
+	sh:targetClass schema:Restaurant;
+	sh:property [
+		sh:predicate schema:description;
+		sh:minCount 1 ;
+	];
+	sh:property [
+		sh:predicate schema:servesCuisine;
+		sh:minCount 1 ;
+	] .</code>
+          </pre>
+            <p style="text-align: center">Shape (SHACL)</p>
+        </div>           
+    </section>      
+          
+	<section>
+	  <h3>Motivation</h3>
+      <h4>Use Case II - Vocabulary Usage Reports</h4>    
+        
+        <p></p>
+  
+        <ul>
+          <li class="fragment">
+            <span style="color: green;">As an </span> ontology engineer / vocabulary developer  
+          </li>
+          <li class="fragment">
+              <span style="color: green;">I want to </span> <b>know how my vocabulary is used</b> in datasets in practice
+          </li>
+          <li class="fragment">
+            <span style="color: green;">so that I </span> can <b>understand mismatches or problems</b> and improve it. 
+          </li>   
+        </ul>
+	</section> 
+          
+    <section>
+        <h3>Use Case II - Example</h3>
+        <ul>
+          <li>Given an ontology (e.g., SSN Ontology)</li>
+          <li class="fragment">Where is it used
+             <ul>
+               <li>How many datasets / instances use each class?</li>
+               <li>How many datasets / triples use each property?</li>     
+             </ul>
+          </li>
+          <li class="fragment"> How is it used
+            <ul>
+                <li>What are the other classes used with instances of each class?</li>
+                <li>What are the common subject types of each property?</li>
+                <li>What are the common object types of each property?</li>
+                <li>Do people use my vocabulary terms in a more generic/specific way?</li>
+                <li>Do people replace part of ontology with another one?</li>
+                <li>Do people frequently violate some restrictions?</li>
+            </ul>
+          </li>   
+        </ul>    
+    </section>      
+
+ <section>
+    	  <h3>Motivation - Contd.</h3>
+     <ul>
+        <li>As an RDF dataset consumer, I want to <b>understand the content and the structure of a dataset</b> so that I can start using it or perform queries without spending hours doing exploratory queries.</li>
+        <li>As an RDF dataset consumer / producer, I want to <b>compare datasets</b> (different datasets or multiple versions of the same dataset) so that I can understand the differences and changes.</li>
+     </ul>      
+</section> 
+          
+<section>
+    <h3>Current dataset descriptions <span style="color: red;">lack expressivity</span> required by such use cases!</h3>
+    <h2 class="fragment">Can we <span style="color: green;">extend</span> dataset descriptions by expressing <span style="color: blue;">data profile patterns?</span></h2>              
+</section>
+          
+<section>
+    <h3>Vocabulary Data Profile Patterns</h3>
+    
+    <ul>
+       <li>An implict schema (shapes) for a given dataset</li>    
+       <li class="fragment"><b>Class analysis</b> 
+           <ul>
+               <li>
+               # of instances, associated properties with their cardinalities, equivalent/super classes 
+               </li>
+           </ul>
+        </li>
+        <li class="fragment">
+           <b>Property analysis</b>
+            <ul>
+               <li>
+               usage frequency, estimated domains / ranges, value ranges/patterns for data type properties 
+               </li>
+           </ul>           
+        </li>
+        <li class="fragment">
+           <b>Abstract triple pattern analysis</b>
+            <img src="img/atp.png"  />        
+        </li>
+        <li class="fragment">
+           <b>Language analysis</b> for strings
+        </li>
+    
+    
+    </ul>
+          
+</section>          
+          
+    <section>
+        <h3>Loupe Model</h3>      
+        <img src="img/model.png"/> 
+        <p>An excerpt from the Loupe model</p>
+    </section> 
+          
+    <section>
+        <h3>Implementation - <span style="font-style: italic;"><a href="http://loupe.linkeddata.es/">http://loupe.linkeddata.es/</a></span></h3> 
+        <img src="img/arch.png"/> 
+        <p>Loupe tool chain</p>
+    </section>          
+          
+	
+        <section>
+          <h1>Thank you!</h1>
+          <p>Mail: <a href="mailto:nmihindu@fi.upm.es">nmihindu@fi.upm.es</a></p>
+          <p>Twitter: <a href="http://twitter.com/nandanamihindu">@nandanamihindu</a></p>
+        </section>
+        
+      </div>
+    </div>
+      
+    <div id="hidden" style="display:none;">
+    <div id="header">
+        <div id="header-left"></div>
+        <div id="header-right"><a href="http://www.oeg-upm.net/"><img src="img/upm-oeg.jpg"  /></a></div>
+        <div id="footer-left"></div>
+    </div>
+    </div>
+  
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+    <script>
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+      controls: true,
+      progress: true,
+      history: true,
+      center: true,
+      transition: 'slide', // none/fade/slide/convex/concave/zoom
+      // Optional reveal.js plugins
+      dependencies: [
+      { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+      { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+      { src: 'plugin/zoom-js/zoom.js', async: true },
+      { src: 'plugin/notes/notes.js', async: true }
+      ]
+      });
+    </script>
+    <script async src="//platform.twitter.com/widgets.js" charset="utf-8">
+    </script>
+    <script>
+      window.twttr = (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0],
+      t = window.twttr || {};
+      if (d.getElementById(id)) return t;
+      js = d.createElement(s);
+      js.id = id;
+      js.src = "https://platform.twitter.com/widgets.js";
+      fjs.parentNode.insertBefore(js, fjs);
+      t._e = [];
+      t.ready = function(f) {
+      t._e.push(f);
+      };
+      return t;
+      }(document, "script", "twitter-wjs"));
+    </script>
+      
+    <script src="js/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript">
+    // 3. On Reveal.js ready event, copy header/footer <div> into each `.slide-background` <div>
+    var header = $('#header').html();
+    if ( window.location.search.match( /print-pdf/gi ) ) {
+        Reveal.addEventListener( 'ready', function( event ) {
+            $('.slide-background').append(header);
+        });
+    }
+    else {
+        $('div.reveal').append(header);
+   }
+    </script>  
+  </body>
+</html>
+
