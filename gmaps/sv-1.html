@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Directly accessing Street View data</title>
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+      
+    <!-- Compressed CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.0/css/foundation.min.css">
+
+    <!-- Compressed JavaScript -->
+      
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.0/js/foundation.min.js"></script>   
+    
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
+      
+    <script>
+ 
+    $(document).foundation();    
+/*
+ * Click the map to set a new location for the Street View camera.
+ */
+
+var map;
+var sv = new google.maps.StreetViewService();
+
+var panorama;  
+
+function initialize() {
+    
+  var latitude = document.getElementById('latitude').value;
+  var longitude = document.getElementById('longitude').value;
+      
+  var myLocation = new google.maps.LatLng(latitude,longitude);  
+    
+  panorama = new google.maps.StreetViewPanorama(document.getElementById('pano'));
+
+  // Set up the map
+  var mapOptions = {
+    center: myLocation,
+    zoom: 16,
+    //mapTypeId: 'satellite',  
+    streetViewControl: false
+  };
+  map = new google.maps.Map(document.getElementById('map-canvas'),
+      mapOptions);
+
+  // Set the initial Street View camera to the center of the map
+  sv.getPanoramaByLocation(myLocation, 200, processSVData);
+
+  // Look for a nearby Street View panorama when the map is clicked.
+  // getPanoramaByLocation will return the nearest pano when the
+  // given radius is 50 meters or less.
+  google.maps.event.addListener(map, 'click', function(event) {
+      sv.getPanoramaByLocation(event.latLng, 50, processSVData);
+  });
+}
+
+function processSVData(data, status) {
+    
+  if (status == google.maps.StreetViewStatus.OK) {
+    var marker = new google.maps.Marker({
+      position: data.location.latLng,
+      map: map,
+      title: data.location.description
+    });
+
+    panorama.setPano(data.location.pano);
+    panorama.setPov({
+      heading: parseInt(document.getElementById('heading').value),
+      pitch: parseInt(document.getElementById('pitch').value)
+    });
+    panorama.setVisible(true);
+
+    google.maps.event.addListener(marker, 'click', function() {
+
+      var markerPanoID = data.location.pano;
+      // Set the Pano to use the passed panoID
+      panorama.setPano(markerPanoID);
+      panorama.setPov({
+        heading: parseInt(document.getElementById('heading').value),
+        pitch: parseInt(document.getElementById('pitch').value)
+      });
+      panorama.setVisible(true);
+    });
+  } else {
+    alert('Street View data not found for this location.');
+  }
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+  </head>
+  <body>
+    <div>
+      <form>
+          <div class="row">
+            <div class="large-2 columns">
+              <label>Latitude
+                <input id="latitude" type="text" value="7.0971557" />
+              </label>
+            </div>
+            <div class="large-2 columns">
+              <label>Longitude
+                <input id="longitude" type="text" value="80.0603986" />
+              </label>
+            </div>
+            <div class="large-2 columns">
+              <label>Heading
+                <input id="heading" type="text"  value="270" />
+              </label>
+            </div>  
+            <div class="large-2 columns">
+              <label>Pitch
+                <input id="pitch" type="text" value="0"/>
+              </label>
+            </div>  
+            <div class="large-4 columns">
+                <label> &nbsp;
+                    <a href="#" class="button round" onclick="initialize()">Show View</a>
+                </label>    
+            </div>
+          </div>
+      </form>      
+    </div>  
+    <div id="map-canvas" style="width: 45%; height: 90%;float:left"></div>
+    <div id="pano" style="width: 45%; height: 90%;float:left"></div>
+  </body>
+</html>
