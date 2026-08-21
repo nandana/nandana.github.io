@@ -1111,7 +1111,7 @@ function WorkshopOrganizerList({ items }) {
   return (
     <div className="workshop-organizer-list">
       <div className="service-subsection-title">
-        <h3>Workshop Chair</h3>
+        <h3>Workshop Co-Chairing</h3>
         <span>Co-chair of {items.length} international workshops related to AI, Knowledge Graphs, and NLP</span>
       </div>
       <div className="workshop-organizer-filters" aria-label="Workshop organizer filters">
@@ -1187,7 +1187,7 @@ function ConferenceOrganizerList({ items }) {
   return (
     <div className="workshop-organizer-list conference-organizer-list">
       <div className="service-subsection-title">
-        <h3>Conference Organization Committee (OC)</h3>
+        <h3>Conference Organizing Committees (OC)</h3>
         <span>{items.length} conferences</span>
       </div>
       <ServiceAcronymFilters items={items} filter={filter} onChange={(value) => { setFilter(value); setDetailsOpen(true); }} acronyms={acronyms} />

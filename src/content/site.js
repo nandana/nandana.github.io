@@ -1,6 +1,6 @@
 export const siteMeta = {
   brand: "Nandana Mihindukulasooriya",
-  title: "Nandana Mihindukulasooriya | Semantic Web and Knowledge Graphs",
+  title: "Nandana Mihindukulasooriya | Knowledge Graphs, LLM Agents & Enterprise AI",
   description:
     "Nandana Mihindukulasooriya is a Senior Research Scientist at IBM Research working on Semantic Web, Knowledge Graphs, and Natural Language Processing.",
   socialDescription:
