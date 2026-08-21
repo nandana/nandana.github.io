@@ -17,7 +17,7 @@ export const sections = [
   { id: "news", title: "News", nav: "News", enabled: false },
   { id: "publications", title: "Publications", nav: "Publications", note: "109 peer-reviewed papers with 2,120 citations", enabled: true },
   { id: "patents", title: "Patents", nav: "Patents", note: "16 patents for innovative solutions advancing AI, knowledge graphs, and NLP.", enabled: true },
-  { id: "service", title: "Professional Service", nav: "Service", enabled: true },
+  { id: "service", title: "Professional Service", nav: "Professional Service", enabled: true },
   { id: "projects", title: "Projects", nav: "Projects", enabled: false },
   { id: "teaching", title: "Mentoring", nav: "Mentoring", enabled: true },
   { id: "talks", title: "Invited Talks", nav: "Talks", enabled: true },

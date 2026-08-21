@@ -11,6 +11,5 @@ export { patents } from "./patents.js";
 export { services } from "./services.js";
 export { workshopOrganizers } from "./workshopOrganizers.js";
 export { conferenceOrganizers } from "./conferenceOrganizers.js";
-export { steeringCommittee } from "./steeringCommittee.js";
 export { programmeCommittees } from "./programmeCommittees.js";
 export { publicationGroups, sections, siteMeta } from "./site.js";

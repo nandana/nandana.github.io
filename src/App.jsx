@@ -17,7 +17,6 @@ import {
   teaching,
   workshopOrganizers,
   conferenceOrganizers,
-  steeringCommittee,
   programmeCommittees
 } from "./content/index.js";
 import {
@@ -121,7 +120,6 @@ function App() {
     patents: <PatentList items={patents} />,
     service: (
       <>
-        <SteeringCommitteeList items={steeringCommittee} />
         <ConferenceOrganizerList items={conferenceOrganizers} />
         <WorkshopOrganizerList items={workshopOrganizers} />
         <ProgrammeCommitteeList items={programmeCommittees} />
@@ -1113,7 +1111,7 @@ function WorkshopOrganizerList({ items }) {
   return (
     <div className="workshop-organizer-list">
       <div className="service-subsection-title">
-        <h3>Workshop Organization</h3>
+        <h3>Workshop Chair</h3>
         <span>Co-chair of {items.length} international workshops related to AI, Knowledge Graphs, and NLP</span>
       </div>
       <div className="workshop-organizer-filters" aria-label="Workshop organizer filters">
@@ -1207,45 +1205,8 @@ function ConferenceOrganizerList({ items }) {
             <span><strong>Year</strong> {item.year}</span>
           </div>
           <div className="action-links">
-            <a href={item.website} target="_blank" rel="noreferrer"><i className="fa-solid fa-globe" aria-hidden="true" /><span>Website</span></a>
-            <a href={item.proceedingsUrl} target="_blank" rel="noreferrer"><i className="fa-solid fa-file-lines" aria-hidden="true" /><span>Proceedings</span></a>
-          </div>
-        </article>
-      )) : null}
-    </div>
-  );
-}
-
-function SteeringCommitteeList({ items }) {
-  const [detailsOpen, setDetailsOpen] = useState(false);
-  const orderedItems = [...items].sort((a, b) => Number(b.year) - Number(a.year));
-  const [filter, setFilter] = useState("All");
-  const acronyms = Array.from(new Set(items.map((item) => item.acronym.replace(/\s+20\d{2}$/, "")))).sort();
-  const visibleItems = orderedItems.filter((item) => filter === "All" || item.acronym.replace(/\s+20\d{2}$/, "") === filter);
-
-  return (
-    <div className="workshop-organizer-list conference-organizer-list">
-      <div className="service-subsection-title">
-        <h3>Conference Steering Committee (SC)</h3>
-        <span>{items.length} conferences</span>
-      </div>
-      <ServiceAcronymFilters items={items} filter={filter} onChange={(value) => { setFilter(value); setDetailsOpen(true); }} acronyms={acronyms} />
-      <div className="details-toggle-row">
-        <button className="publication-details-toggle workshop-organizer-toggle" type="button" aria-expanded={detailsOpen} onClick={() => setDetailsOpen((value) => !value)}>
-          <span>{detailsOpen ? "Hide steering committee list" : `Show ${items.length} conferences`}</span>
-          <i className={`fa-solid fa-chevron-${detailsOpen ? "up" : "down"}`} aria-hidden="true" />
-        </button>
-      </div>
-      {detailsOpen ? visibleItems.map((item) => (
-        <article className="workshop-organizer-card" key={`${item.acronym}-${item.year}`}>
-          <h3><span className="workshop-acronym">{item.acronym}</span> <span>{item.title}</span></h3>
-          <div className="workshop-organizer-meta">
-            <span><strong>{item.role}</strong></span>
-            <span><strong>Year</strong> {item.year}</span>
-          </div>
-          <div className="action-links">
-            <a href={item.website} target="_blank" rel="noreferrer"><i className="fa-solid fa-globe" aria-hidden="true" /><span>Website</span></a>
-            <a href={item.proceedingsUrl} target="_blank" rel="noreferrer"><i className="fa-solid fa-file-lines" aria-hidden="true" /><span>Proceedings</span></a>
+            {item.website ? <a href={item.website} target="_blank" rel="noreferrer"><i className="fa-solid fa-globe" aria-hidden="true" /><span>Website</span></a> : null}
+            {item.proceedingsUrl ? <a href={item.proceedingsUrl} target="_blank" rel="noreferrer"><i className="fa-solid fa-file-lines" aria-hidden="true" /><span>Proceedings</span></a> : null}
           </div>
         </article>
       )) : null}

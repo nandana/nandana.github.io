@@ -1,5 +1,20 @@
 export const conferenceOrganizers = [
   {
+    title: "13th International Conference on Knowledge Capture",
+    acronym: "K-CAP 2025",
+    year: "2025",
+    role: "Steering Committee Member",
+    website: "https://www.k-cap.org/2025/",
+    proceedingsUrl: "https://dl.acm.org/doi/proceedings/10.1145/3731443"
+  },
+  {
+    title: "4th International Semantic Intelligence Conference",
+    acronym: "ISIC 2025",
+    year: "2025",
+    role: "Steering Committee Member",
+    website: "https://www.ifis.uni-luebeck.de/~groppe/isic/"
+  },
+  {
     title: "23rd International Semantic Web Conference",
     acronym: "ISWC 2024",
     year: "2024",
