@@ -2,6 +2,37 @@
 export const publications = [
   {
     "researchType": "Research",
+    "title": "OntoLearner: A Modular Python Library for Ontology Learning with Large Language Models",
+    "venue": "arXiv",
+    "year": "2026",
+    "type": "Journal / Preprint",
+    "group": "Knowledge Graphs",
+    "authors": "Hamed Babaei Giglou, Jennifer D\u2019Souza, Andrei Aioanei, Nandana Mihindukulasooriya, S\u00f6ren Auer",
+    "links": [
+      {
+        "label": "arXiv",
+        "href": "https://arxiv.org/abs/2607.01977"
+      }
+    ]
+  },
+  {
+    "researchType": "Workshop",
+    "title": "How Much Structure Should Agentic Graph Memory Build for Text Retrieval",
+    "venue": "Agents+Graphs: 3rd International Workshop on Data Management Opportunities in Bringing Agents with Graph Data, co-located with VLDB 2026. Proceedings of the VLDB Endowment, ISSN 2150-8097",
+    "year": "2026",
+    "type": "Conference",
+    "group": "Knowledge Graphs",
+    "authors": "Satyananda Kashyap, Niharika D\u2019Souza, Nandana Mihindukulasooriya, Horst Samulowitz",
+    "links": [
+      {
+        "label": "Paper",
+        "href": "https://www.vldb.org/2026/Workshops/VLDB-Workshops-2026/Agents+Graphs/AgentGraph26-2.pdf"
+      }
+    ],
+    "conference": "VLDB"
+  },
+  {
+    "researchType": "Research",
     "title": "SemStruct: Contextualizing Semantic Embeddings with Structural Information for Schema Matching",
     "venue": "Proceedings of the 32nd ACM SIGKDD Conference on Knowledge Discovery and Data Mining V.2, Republic of Korea, pages 2261-2272",
     "year": "2026",

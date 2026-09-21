@@ -15,7 +15,7 @@ export const sections = [
   { id: "education", title: "Education", nav: "Education", note: "An academic journey from computer science and software engineering to a PhD in AI.", enabled: true },
   { id: "experience", title: "Experience", nav: "Experience", note: "13+ years of experience spanning software engineering and AI research across four countries in the US, Europe, and Asia.", enabled: true },
   { id: "news", title: "News", nav: "News", enabled: false },
-  { id: "publications", title: "Publications", nav: "Publications", note: "109 peer-reviewed papers with 2,120 citations", enabled: true },
+  { id: "publications", title: "Publications", nav: "Publications", note: "109 peer-reviewed papers with 2,158 citations", enabled: true },
   { id: "patents", title: "Patents", nav: "Patents", note: "16 patents for innovative solutions advancing AI, knowledge graphs, and NLP.", enabled: true },
   { id: "service", title: "Professional Service", nav: "Professional Service", enabled: true },
   { id: "projects", title: "Projects", nav: "Projects", enabled: false },

@@ -17,7 +17,8 @@ import {
   teaching,
   workshopOrganizers,
   conferenceOrganizers,
-  programmeCommittees
+  programmeCommittees,
+  standardizationActivities
 } from "./content/index.js";
 import {
   fallbackTitleIcon,
@@ -123,6 +124,7 @@ function App() {
         <ConferenceOrganizerList items={conferenceOrganizers} />
         <WorkshopOrganizerList items={workshopOrganizers} />
         <ProgrammeCommitteeList items={programmeCommittees} />
+        <StandardizationActivities groups={standardizationActivities} />
         <ServiceList items={services} />
       </>
     )
@@ -490,12 +492,12 @@ function ScholarMetrics() {
           <i className="ai ai-google-scholar" aria-hidden="true" />
           <span>Google Scholar</span>
         </a>
-        <small>Updated Aug 18, 2026</small>
+        <small>Updated Sept 21, 2026</small>
       </div>
       <div className="scholar-metrics-values">
-        <MetricStat label="Citations" value="2,120" />
+        <MetricStat label="Citations" value="2,158" />
         <MetricStat label="h-index" value="24" />
-        <MetricStat label="i10-index" value="49" />
+        <MetricStat label="i10-index" value="50" />
       </div>
     </div>
   );
@@ -1240,6 +1242,44 @@ function ProgrammeCommitteeList({ items }) {
       <div className="details-toggle-row"><button className="publication-details-toggle workshop-organizer-toggle" type="button" aria-expanded={detailsOpen} onClick={() => setDetailsOpen((value) => !value)}><span>{detailsOpen ? "Hide programme committee list" : `Show ${visible.length} conferences`}</span><i className={`fa-solid fa-chevron-${detailsOpen ? "up" : "down"}`} aria-hidden="true" /></button></div>
       {detailsOpen ? visible.map((item) => <article className="workshop-organizer-card" key={`${item.acronym}-${item.title}`}><h3><span className="workshop-acronym">{item.acronym}</span> <span>{item.title}</span></h3><div className="programme-roles">{item.roles.map((role) => <span key={role}>{role}</span>)}</div><div className="action-links"><a href={item.website} target="_blank" rel="noreferrer"><i className="fa-solid fa-globe" aria-hidden="true" /><span>Website</span></a>{item.proceedings.map((proceeding) => { const url = typeof proceeding === "string" ? proceeding : proceeding.url; const label = typeof proceeding === "string" ? "Proceedings" : proceeding.label; return <a href={url} target="_blank" rel="noreferrer" key={url}><i className="fa-solid fa-file-lines" aria-hidden="true" /><span>{label}</span></a>; })}</div></article>) : null}
       {detailsOpen && !visible.length ? <p className="publication-empty">No programme committees match the selected filters.</p> : null}
+    </div>
+  );
+}
+
+function StandardizationActivities({ groups }) {
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const activityCount = groups.reduce((total, group) => total + group.activities.length, 0);
+
+  return (
+    <div className="workshop-organizer-list standardization-list">
+      <div className="service-subsection-title">
+        <h3>Standardization Activities</h3>
+        <span>Member of 6 international standardization groups across W3C and OASIS.</span>
+      </div>
+      <div className="details-toggle-row">
+        <button className="publication-details-toggle workshop-organizer-toggle" type="button" aria-expanded={detailsOpen} onClick={() => setDetailsOpen((value) => !value)}>
+          <span>{detailsOpen ? "Hide standardization activities" : `Show ${activityCount} activities`}</span>
+          <i className={`fa-solid fa-chevron-${detailsOpen ? "up" : "down"}`} aria-hidden="true" />
+        </button>
+      </div>
+      {detailsOpen ? groups.map((group) => (
+        <section className="standardization-group" key={group.organization}>
+          <h4>{group.organization}</h4>
+          {group.activities.map((activity) => (
+            <article className="workshop-organizer-card" key={activity.name}>
+              <h3>{activity.name}</h3>
+              <div className="workshop-organizer-meta">
+                <span><strong>Period</strong> {activity.period}</span>
+                <span><strong>Affiliation</strong> {activity.affiliation}</span>
+              </div>
+              <div className="action-links">
+                {activity.website ? <a href={activity.website} target="_blank" rel="noreferrer"><i className="fa-solid fa-globe" aria-hidden="true" /><span>Website</span></a> : null}
+                {activity.deliverables.map((deliverable) => <a href={deliverable.url} target="_blank" rel="noreferrer" key={deliverable.url}><i className="fa-solid fa-file-lines" aria-hidden="true" /><span>{deliverable.title}</span></a>)}
+              </div>
+            </article>
+          ))}
+        </section>
+      )) : null}
     </div>
   );
 }
