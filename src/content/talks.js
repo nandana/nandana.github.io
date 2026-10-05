@@ -6,7 +6,8 @@ export const talks = [
     detail: "Invited industry lecture.",
     type: "Invited",
     links: [
-      { label: "Certificate", href: "https://drive.google.com/file/d/12VD6akuxgpKMNriOGb6yy_OC0o-qPTeT/view?usp=sharing" }
+      { label: "Certificate (Eng)", href: "https://drive.google.com/file/d/12VD6akuxgpKMNriOGb6yy_OC0o-qPTeT/view?usp=sharing" },
+      { label: "Certificate (Esp)", href: "https://drive.google.com/file/d/1RqOtcn4yS19g_3SNzVYVIcA1rft2ciG6/view?usp=drive_link" }
     ]
   },
   {
