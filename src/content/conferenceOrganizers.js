@@ -36,7 +36,8 @@ export const conferenceOrganizers = [
     year: "2025",
     role: "Industry & Start-up Chair",
     website: "https://www.um.org/umap2025/",
-    proceedingsUrl: "https://dl.acm.org/doi/proceedings/10.1145/3699682"
+    proceedingsUrl: "https://dl.acm.org/doi/proceedings/10.1145/3699682",
+    linkedinUrl: "https://lnkd.in/p/ebmdebjb"
   },
   {
     title: "3rd International Semantic Intelligence Conference",

@@ -24,7 +24,6 @@ import {
   fallbackTitleIcon,
   getActionIcon,
   newsIconMap,
-  profileIconMap,
   publicationGroupIconMap,
   sectionIconMap,
   serviceIconMap,
@@ -197,8 +196,10 @@ function App() {
         </div>
       </header>
 
+      <Hero />
+
       <div className="page-shell">
-        <aside className="profile-sidebar" aria-label="Profile">
+        <aside className="profile-sidebar" aria-label="Research focus and news">
           <SidebarProfile />
         </aside>
 
@@ -235,50 +236,82 @@ function App() {
   );
 }
 
+function Hero() {
+  const [firstName, ...otherNames] = profile.name.split(" ");
+  const metrics = profile.scholarMetrics ?? {};
+  const peerReviewed = publications.filter((paper) => paper.conference !== "arXiv").length;
+  const heroStats = [
+    { value: profile.hero?.yearsOfExperience, label: "Years of experience", href: "#experience" },
+    { value: String(peerReviewed), label: "Peer-reviewed papers", href: "#publications" },
+    { value: String(patents.length), label: "Patents", href: "#patents" },
+    { value: metrics.citations, label: "Citations" },
+    { value: metrics.hIndex, label: "h-index" }
+  ].filter((item) => item.value);
+
+  return (
+    <section className="hero" aria-labelledby="hero-name">
+      <div className="hero-inner">
+        <div className="hero-copy">
+          {profile.hero?.eyebrow ? <p className="hero-eyebrow">{profile.hero.eyebrow}</p> : null}
+          <h1 id="hero-name" className="hero-name">
+            <span>{firstName}</span>
+            {otherNames.length ? (
+              <span className="hero-name-accent">
+                {otherNames.join(" ")}
+                {profile.hero?.credential ? <>,{" "}<span className="hero-name-suffix">{profile.hero.credential}</span></> : null}
+              </span>
+            ) : null}
+          </h1>
+          {profile.hero?.intro ? <p className="hero-intro">{profile.hero.intro}</p> : null}
+          {profile.hero?.actions?.length ? (
+            <div className="hero-actions">
+              {profile.hero.actions.map((action, index) => (
+                <a key={action.href} className={`hero-button${index === 0 ? " is-primary" : ""}`} href={action.href}>
+                  <span>{action.label}</span>
+                  <span aria-hidden="true">→</span>
+                </a>
+              ))}
+            </div>
+          ) : null}
+          <div className="hero-links">
+            {profile.links.map((link) => (
+              <a key={link.label} href={link.href} target="_blank" rel="noreferrer">
+                <span>{link.label}</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+            ))}
+          </div>
+        </div>
+        {profile.avatar ? (
+          <figure className="hero-portrait">
+            <img src={profile.avatar} width="400" height="400" decoding="async" fetchPriority="high" alt={profile.name} />
+          </figure>
+        ) : null}
+        {heroStats.length ? (
+          <dl className="hero-stats">
+            {heroStats.map((item) => {
+              const content = (
+                <>
+                  <dt>{item.label}</dt>
+                  <dd>{item.value}</dd>
+                </>
+              );
+              return item.href
+                ? <a className="hero-stat" href={item.href} key={item.label}>{content}</a>
+                : <div className="hero-stat" key={item.label}>{content}</div>;
+            })}
+          </dl>
+        ) : null}
+      </div>
+    </section>
+  );
+}
+
 function SidebarProfile() {
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const organizationText = [profile.role, profile.organization ? `at ${profile.organization}` : ""].filter(Boolean).join(" ");
 
   return (
     <div className="sidebar-card">
-      <div className="sidebar-avatar-frame">
-        {profile.avatar ? (
-          <img
-            className="sidebar-avatar"
-            src={profile.avatar}
-            width="192"
-            height="192"
-            decoding="async"
-            fetchPriority="high"
-            alt={profile.name}
-          />
-        ) : (
-          <div className="sidebar-avatar sidebar-avatar-placeholder" aria-hidden="true">
-            {getInitials(profile.name)}
-          </div>
-        )}
-      </div>
-      <div className="sidebar-identity">
-        <h1>{profile.name}</h1>
-        {profile.nativeName ? <p>{profile.nativeName}</p> : null}
-        {organizationText ? <span>{organizationText}</span> : null}
-      </div>
-      <div className="sidebar-meta">
-        {profile.location ? (
-          <span>
-            <i className="fa-solid fa-location-dot" aria-hidden="true" />
-            {profile.location}
-          </span>
-        ) : null}
-        {profile.email ? (
-          <a href={`mailto:${profile.email}`}>
-            <i className="fa-solid fa-envelope" aria-hidden="true" />
-            {profile.email}
-          </a>
-        ) : null}
-      </div>
-      <ProfileLinks />
-
       <button
         className="sidebar-toggle"
         type="button"
@@ -286,7 +319,7 @@ function SidebarProfile() {
         aria-expanded={detailsOpen}
         onClick={() => setDetailsOpen((value) => !value)}
       >
-        <span>Profile Details</span>
+        <span>Research Focus &amp; News</span>
         <i className={`fa-solid fa-chevron-${detailsOpen ? "up" : "down"}`} aria-hidden="true" />
       </button>
 
@@ -494,12 +527,12 @@ function ScholarMetrics() {
           <i className="ai ai-google-scholar" aria-hidden="true" />
           <span>Google Scholar</span>
         </a>
-        <small>Updated Nov 26, 2026</small>
+        <small>Updated {profile.scholarMetrics.updated}</small>
       </div>
       <div className="scholar-metrics-values">
-        <MetricStat label="Citations" value="2,289" />
-        <MetricStat label="h-index" value="25" />
-        <MetricStat label="i10-index" value="53" />
+        <MetricStat label="Citations" value={profile.scholarMetrics.citations} />
+        <MetricStat label="h-index" value={profile.scholarMetrics.hIndex} />
+        <MetricStat label="i10-index" value={profile.scholarMetrics.i10Index} />
       </div>
     </div>
   );
@@ -791,18 +824,6 @@ function ProjectList({ items, githubStats }) {
           {project.tags?.length ? <TagList items={project.tags} className="project-tags" /> : null}
           <ActionLinks links={project.links} githubStats={githubStats} />
         </article>
-      ))}
-    </div>
-  );
-}
-
-function ProfileLinks() {
-  return (
-    <div className="profile-links">
-      {profile.links.map((link) => (
-        <a key={link.label} href={link.href} target="_blank" rel="noreferrer" aria-label={link.label} title={link.label}>
-          <i className={profileIconMap[link.icon] ?? profileIconMap.Website} aria-hidden="true" />
-        </a>
       ))}
     </div>
   );
@@ -1144,8 +1165,9 @@ function WorkshopOrganizerList({ items }) {
           </div>
           {item.proceedingsCitation ? <p>{item.proceedingsCitation}</p> : null}
           <div className="action-links">
-            {item.website ? <a href={item.website} target="_blank" rel="noreferrer"><i className="fa-solid fa-globe" aria-hidden="true" /><span>Website</span></a> : null}
             {item.proceedingsUrl ? <a href={item.proceedingsUrl} target="_blank" rel="noreferrer"><i className="fa-solid fa-file-lines" aria-hidden="true" /><span>Proceedings</span></a> : null}
+            {item.website ? <a href={item.website} target="_blank" rel="noreferrer"><i className="fa-solid fa-globe" aria-hidden="true" /><span>Website</span></a> : null}
+            {item.linkedinUrl ? <a href={item.linkedinUrl} target="_blank" rel="noreferrer"><i className="fa-brands fa-linkedin-in" aria-hidden="true" /><span>LinkedIn</span></a> : null}
           </div>
         </article>
       )) : null}
@@ -1211,6 +1233,7 @@ function ConferenceOrganizerList({ items }) {
           <div className="action-links">
             {item.website ? <a href={item.website} target="_blank" rel="noreferrer"><i className="fa-solid fa-globe" aria-hidden="true" /><span>Website</span></a> : null}
             {item.proceedingsUrl ? <a href={item.proceedingsUrl} target="_blank" rel="noreferrer"><i className="fa-solid fa-file-lines" aria-hidden="true" /><span>Proceedings</span></a> : null}
+            {item.linkedinUrl ? <a href={item.linkedinUrl} target="_blank" rel="noreferrer"><i className="fa-brands fa-linkedin-in" aria-hidden="true" /><span>LinkedIn</span></a> : null}
           </div>
         </article>
       )) : null}
@@ -1673,15 +1696,6 @@ function formatGithubCount(value) {
     return `${rounded.toString().replace(/\.0$/, "")}k`;
   }
   return value.toString();
-}
-
-function getInitials(value = "") {
-  return value
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join("") || "A";
 }
 
 function isRasterImage(src) {
