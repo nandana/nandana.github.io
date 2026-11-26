@@ -1,4 +1,7 @@
 export const programmeCommittees = [
+  { acronym: "AAAI 2027", title: "41st Annual AAAI Conference on Artificial Intelligence", year: "2027", roles: ["Programme Committee - Research Track"], website: "https://aaai.org/conference/aaai/aaai-27/", proceedings: [] },
+  { acronym: "WWW 2027", title: "2027 ACM Web Conference", year: "2027", roles: ["Programme Committee - Research Track"], website: "https://www2027.thewebconf.org/", proceedings: [] },
+  { acronym: "NAACL 2027", title: "2027 Annual Conference of the Nations of the Americas Chapter of the Association for Computational Linguistics", year: "2027", roles: ["Programme Committee - Research Track"], website: "https://2027.naacl.org/", proceedings: [] },
   { acronym: "ACL 2026", title: "64th Annual Meeting of the Association for Computational Linguistics", year: "2026", roles: ["Programme Committee - Industry Track"], website: "https://2026.aclweb.org/", proceedings: ["https://aclanthology.org/2026.acl-industry.0/"] },
   { acronym: "WWW 2026", title: "2026 ACM Web Conference", year: "2026", roles: ["Programme Committee - Industry Track"], website: "https://www2026.thewebconf.org/", proceedings: ["https://dl.acm.org/doi/proceedings/10.1145/3774904"] },
   { acronym: "EMNLP 2026", title: "2026 Conference on Empirical Methods in Natural Language Processing", year: "2026", roles: ["Area Chair - Research Track"], website: "https://2026.emnlp.org/", proceedings: [] },

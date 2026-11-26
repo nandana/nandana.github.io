@@ -1,6 +1,182 @@
 // Imported from DBLP and manually curated publication records for Nandana Mihindukulasooriya.
 export const publications = [
   {
+    "researchType": "Demo",
+    "title": "Virtual Data Machine: Agentic Build of an Autonomous Data Stack",
+    "venue": "The Forty-First AAAI Conference on Artificial Intelligence (AAAI-27), Demonstration Track",
+    "year": "2027",
+    "type": "Conference",
+    "group": ["Data Agents", "Data Science"],
+    "authors": "Haritha Ananthakrishnan, Gregory Bramble, Niharika S. D’Souza, Satyananda Kashyap, Michael Katz, Harsha Kokel, Nandana Mihindukulasooriya, Horst Samulowitz, Sola Shirai, Ranjan Sinha, Shirin Sohrabi, Kavitha Srinivas, Lisa Amini",
+    "links": [],
+    "conference": "AAAI"
+  },
+  {
+    "researchType": "Resource",
+    "title": "DPDisc: From Factoid Questions to Data Product Requests for Open-World Data Product Discovery over Tables and Text",
+    "venue": "Findings of the Association for Computational Linguistics: IJCNLP-AACL 2026, Hengqin, China, pages 4846-4865",
+    "year": "2026",
+    "type": "Conference",
+    "group": "Natural Language Processing",
+    "authors": "Liangliang Zhang, Nandana Mihindukulasooriya, Niharika S. D\u2019Souza, Sola Shirai, Sarthak Dash, Yao Ma, Horst Samulowitz",
+    "links": [
+      {
+        "label": "Paper",
+        "href": "https://aclanthology.org/2026.findings-aacl.247/"
+      },
+      {
+        "label": "arXiv",
+        "href": "https://arxiv.org/abs/2510.21737"
+      }
+    ],
+    "conference": "AACL"
+  },
+  {
+    "researchType": "Demo",
+    "title": "ASTER: Agentic Text-to-SPARQL with Task Skills, Autonomous Exploration, and Refinement",
+    "venue": "ISWC 2026 Posters and Demos Track, co-located with the 25th International Semantic Web Conference (ISWC 2026), Bari, Italy",
+    "year": "2026",
+    "type": "Conference",
+    "group": "Semantic Web",
+    "authors": "Nandana Mihindukulasooriya, Niharika S. D\u2019Souza, Satyananda Kashyap, Oshani Seneviratne, Horst Samulowitz",
+    "links": [],
+    "conference": "ISWC"
+  },
+  {
+    "researchType": "Workshop",
+    "title": "Can Skill-Driven LLM Agents Solve Text2SPARQL through Autonomous Exploration and Iterative Refinement?",
+    "venue": "Proceedings of the First Wiki-Based Knowledge Graph Question Answering Challenge (WikiKGQA 2026), co-located with the 25th International Semantic Web Conference (ISWC 2026), Bari, Italy, October 25, 2026",
+    "year": "2026",
+    "type": "Conference",
+    "group": "Semantic Web",
+    "authors": "Nandana Mihindukulasooriya, Niharika S. D’Souza, Satyananda Kashyap, Oshani Seneviratne, Horst Samulowitz",
+    "links": [
+      {
+        "label": "Paper",
+        "href": "https://ceur-ws.org/Vol-4284/paper4.pdf"
+      }
+    ],
+    "conference": "ISWC"
+  },
+  {
+    "researchType": "Workshop",
+    "title": "What Skill Dependency Graphs Are Really Good For: An Empirical Study",
+    "venue": "Proceedings of the 1st Workshop on AI-assisted Approaches to Knowledge Engineering (AIAA4KE 2026), co-located with the 25th International Semantic Web Conference (ISWC 2026), Bari, Italy",
+    "year": "2026",
+    "type": "Conference",
+    "group": "Knowledge Graphs",
+    "authors": "Jui-Chien Lin, Oshani Seneviratne, Nandana Mihindukulasooriya, Sola Shirai, Niharika S. D’Souza, Satyananda Kashyap, Horst Samulowitz",
+    "links": [
+      {
+        "label": "Program",
+        "href": "https://sites.google.com/view/aiaa4ke/home/program"
+      }
+    ],
+    "conference": "ISWC"
+  },
+  {
+    "researchType": "Resource",
+    "title": "Beyond Edge Addition: A Dataset for Information Extraction Incorporating New Instances, Types, and Relations",
+    "venue": "The Semantic Web - ISWC 2026, 25th International Semantic Web Conference, Bari, Italy, Proceedings. Lecture Notes in Computer Science, vol 17128, Springer",
+    "year": "2026",
+    "type": "Conference",
+    "group": "Knowledge Graphs",
+    "authors": "Sven Hertling, Cedric M\u00f6ller, Nandana Mihindukulasooriya, Ricardo Usbeck",
+    "links": [
+      {
+        "label": "Paper",
+        "href": "https://doi.org/10.1007/978-3-032-42029-9_3"
+      }
+    ],
+    "conference": "ISWC"
+  },
+  {
+    "researchType": "Workshop",
+    "title": "When Should We Build the Graph? An Amortized Pareto View of Demand-Driven Knowledge Graph Construction",
+    "venue": "Proceedings of the 5th International Workshop on Natural Language Processing for Knowledge Graph Construction (NLP4KGC 2026), co-located with the 25th International Semantic Web Conference (ISWC 2026), Bari, Italy, October 26, 2026",
+    "year": "2026",
+    "type": "Conference",
+    "group": "Knowledge Graphs",
+    "authors": "Niharika S. D\u2019Souza, Satyananda Kashyap, Nandana Mihindukulasooriya, Jui-Chien Lin, Oshani Seneviratne, Horst Samulowitz",
+    "links": [
+      {
+        "label": "Paper",
+        "href": "https://ceur-ws.org/Vol-4335/paper5.pdf"
+      }
+    ],
+    "conference": "ISWC"
+  },
+  {
+    "researchType": "Workshop",
+    "title": "Synergistic AI Agents: Integrating Knowledge Graphs and Large Language Models for Scholarly Communication",
+    "venue": "Open Conference Proceedings, Vol. 8 (2026): The Second Bridge on Artificial Intelligence for Scholarly Communication (AAAI-26)",
+    "year": "2026",
+    "type": "Conference",
+    "group": "Knowledge Graphs",
+    "authors": "Bharath Chand, Sanju Tiwari, Nandana Mihindukulasooriya, Soren Auer",
+    "summary": "This work explores how Knowledge Graphs can complement Large Language Models in Agentic AI for scholarly communication by improving provenance tracking, reasoning, temporal awareness, context management, and resistance to frequency bias.",
+    "links": [
+      {
+        "label": "Paper",
+        "href": "https://www.tib-op.org/ojs/index.php/ocp/article/view/3172"
+      },
+      {
+        "label": "DOI",
+        "href": "https://doi.org/10.52825/ocp.v8i.3172"
+      }
+    ],
+    "conference": "AAAI"
+  },
+  {
+    "researchType": "Research",
+    "title": "OlyGraph: A Knowledge Graph and Data Engineering Framework for Olympics Analytics",
+    "venue": "2026 2nd International Conference on Advanced Machine Learning and Data Science (AMLDS), Osaka, Japan, pages 522-527",
+    "year": "2026",
+    "type": "Conference",
+    "group": "Knowledge Graphs",
+    "authors": "Sarika Jain, Ankush Bisht, Pooja Harde, Nandana Mihindukulasooriya",
+    "tags": ["Ontology Engineering", "Linked Open Data", "SPARQL", "Sports Analytics"],
+    "links": [
+      {
+        "label": "Paper",
+        "href": "https://doi.org/10.1109/AMLDS69611.2026.11724317"
+      }
+    ],
+    "conference": "AMLDS"
+  },
+  {
+    "researchType": "Resource",
+    "title": "FlinkEval: A Synthetic Corpus for Evaluating Natural Language Interfaces to Streaming SQL",
+    "venue": "arXiv",
+    "year": "2026",
+    "type": "Journal / Preprint",
+    "group": "Natural Language Processing",
+    "authors": "Alfio Massimiliano Gliozzo, Nandana Mihindukulasooriya, Gaetano Rossiello, Erick Lee, Lisa Amini",
+    "links": [
+      {
+        "label": "arXiv",
+        "href": "https://arxiv.org/abs/2611.17093"
+      }
+    ],
+    "conference": "arXiv"
+  },
+  {
+    "researchType": "Research",
+    "title": "Self-Refining Prompt Induction for Streaming Text-to-SQL",
+    "venue": "arXiv",
+    "year": "2026",
+    "type": "Journal / Preprint",
+    "group": "Natural Language Processing",
+    "authors": "Gaetano Rossiello, Alfio Gliozzo, Nandana Mihindukulasooriya, Erick Lee, Nabila Siregar, Lisa Amini",
+    "links": [
+      {
+        "label": "arXiv",
+        "href": "https://arxiv.org/abs/2611.00960"
+      }
+    ],
+    "conference": "arXiv"
+  },
+  {
     "researchType": "Research",
     "title": "OntoLearner: A Modular Python Library for Ontology Learning with Large Language Models",
     "venue": "arXiv",
@@ -14,6 +190,22 @@ export const publications = [
         "href": "https://arxiv.org/abs/2607.01977"
       }
     ]
+  },
+  {
+    "researchType": "Workshop",
+    "title": "Towards Budget-Aware Dense Retrieval for Tables: Trade-offs, Alternatives and Future Directions",
+    "venue": "VLDB 2026 Workshop: Tabular Data Analysis (TaDA)",
+    "year": "2026",
+    "type": "Conference",
+    "group": "Natural Language Processing",
+    "authors": "Inwon Kang, Kavitha Srinivas, Sola Shirai, Nandana Mihindukulasooriya, Niharika S. D’Souza, Horst Samulowitz, Oshani Seneviratne",
+    "links": [
+      {
+        "label": "Paper",
+        "href": "https://vldb.org/2026/Workshops/VLDB-Workshops-2026/TaDA/TaDA26_14.pdf"
+      }
+    ],
+    "conference": "VLDB"
   },
   {
     "researchType": "Workshop",
@@ -54,7 +246,7 @@ export const publications = [
   {
     "researchType": "Workshop",
     "title": "Agentic AI, Context Engineering and Knowledge Graphs: Current Approaches, Challenges and Opportunities",
-    "venue": "Proceedings of the Workshops of the EDBT/ICDT 2026 Joint Conference co-located with the EDBT/ICDT 2025 Joint Conference, Tampere, Finland, March 24, 2026",
+    "venue": "1st International Workshop on Quality in Large Language Models and Knowledge Graphs (QuaLLM-KG), Proceedings of the Workshops of the EDBT/ICDT 2026 Joint Conference, Tampere, Finland, March 24, 2026",
     "year": "2026",
     "type": "Conference",
     "group": "Knowledge Graphs",
@@ -258,34 +450,6 @@ export const publications = [
       }
     ],
     "conference": "ISWC"
-  },
-  {
-    "researchType": "Resource",
-    "title": "From Factoid Questions to Data Product Requests: Benchmarking Data Product Discovery over Tables and Text",
-    "venue": "arXiv",
-    "year": "2025",
-    "type": "Journal / Preprint",
-    "group": "Natural Language Processing",
-    "authors": "Liangliang Zhang, Nandana Mihindukulasooriya, Niharika S. D'Souza, Sola Shirai, Sarthak Dash, Yao Ma, Horst Samulowitz",
-    "links": [
-      {
-        "label": "arXiv",
-        "href": "https://doi.org/10.48550/arXiv.2510.21737"
-      },
-      {
-        "label": "DOI",
-        "href": "https://doi.org/10.48550/ARXIV.2510.21737"
-      },
-      {
-        "label": "DBLP",
-        "href": "https://dblp.org/rec/journals/corr/abs-2510-21737"
-      },
-      {
-        "label": "arXiv",
-        "href": "https://arxiv.org/abs/2510.21737"
-      }
-    ],
-    "conference": "arXiv"
   },
   {
     "researchType": "Resource",
@@ -2346,27 +2510,6 @@ export const publications = [
       }
     ],
     "conference": "INFORMATIK"
-  },
-  {
-    "researchType": "Workshop",
-    "title": "Synergistic AI Agents: Integrating Knowledge Graphs and Large Language Models for Scholarly Communication",
-    "venue": "The Second Bridge on Artificial Intelligence for Scholarly Communication at AAAI-26",
-    "year": "2026",
-    "type": "Conference",
-    "group": "Knowledge Graphs",
-    "authors": "Bharath Chand, Sanju Tiwari, Nandana Mihindukulasooriya, Soren Auer",
-    "summary": "This work explores how Knowledge Graphs can complement Large Language Models in Agentic AI for scholarly communication by improving provenance tracking, reasoning, temporal awareness, context management, and resistance to frequency bias.",
-    "links": [
-      {
-        "label": "Paper",
-        "href": "https://www.tib-op.org/ojs/index.php/ocp/article/view/3172"
-      },
-      {
-        "label": "DOI",
-        "href": "https://doi.org/10.52825/ocp.v8i.3172"
-      }
-    ],
-    "conference": "AAAI"
   },
   {
     "researchType": "Research",

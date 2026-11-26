@@ -36,7 +36,9 @@ const chartColors = ["#245a96", "#5c9ec6", "#7a8f36", "#b66f36", "#7b6fb3", "#3f
 const githubStatsCacheTtl = 1000 * 60 * 5;
 const conferenceNames = {
   AAAI: "Association for the Advancement of Artificial Intelligence Conference",
+  AACL: "Conference of the Asia-Pacific Chapter of the Association for Computational Linguistics",
   ACL: "Annual Meeting of the Association for Computational Linguistics",
+  AMLDS: "International Conference on Advanced Machine Learning and Data Science",
   CAEPIA: "Conference of the Spanish Association for Artificial Intelligence",
   CIKM: "ACM International Conference on Information and Knowledge Management",
   COLD: "International Workshop on Consuming Linked Data",
@@ -541,7 +543,7 @@ function PublicationVisualization({ papers }) {
   const years = Array.from(new Set(papers.map((paper) => Number(paper.year)).filter(Boolean))).sort((a, b) => a - b);
   const maxYearCount = Math.max(...years.map((year) => papers.filter((paper) => Number(paper.year) === year).length), 1);
   const venues = countBy(papers, (paper) => shortenVenue(paper.venue)).sort((a, b) => b.value - a.value).slice(0, 8);
-  const topics = countBy(papers, (paper) => paper.group || "Other").sort((a, b) => b.value - a.value);
+  const topics = countByMany(papers, getPaperGroups).sort((a, b) => b.value - a.value);
   const collaborators = getCollaborators(papers).slice(0, 18);
 
   useEffect(() => {
@@ -696,7 +698,7 @@ function PublicationVisual({ paper }) {
   if (!paper.image) {
     return (
       <div className="paper-figure paper-figure-fallback">
-        <span>{paper.group ?? paper.type ?? "Research"}</span>
+        <span>{getPaperGroups(paper, null).join(" · ") || paper.type || "Research"}</span>
       </div>
     );
   }
@@ -1285,7 +1287,7 @@ function StandardizationActivities({ groups }) {
 }
 
 function getPublicationGroups(papers, preferredOrder) {
-  const found = new Set(papers.map((paper) => paper.group).filter(Boolean));
+  const found = new Set(papers.flatMap((paper) => getPaperGroups(paper, null)));
   const ordered = preferredOrder.filter((group) => found.has(group));
   const remaining = Array.from(found).filter((group) => !ordered.includes(group)).sort();
   return [...ordered, ...remaining];
@@ -1293,7 +1295,7 @@ function getPublicationGroups(papers, preferredOrder) {
 
 function getPublicationStats(papers) {
   const byYear = countBy(papers, (paper) => paper.year || "Unknown").sort((a, b) => b.label.localeCompare(a.label));
-  const byGroup = countBy(papers, (paper) => paper.group || "Other").sort((a, b) => b.value - a.value);
+  const byGroup = countByMany(papers, getPaperGroups).sort((a, b) => b.value - a.value);
   const byType = countBy(papers, (paper) => paper.type || "Publication").sort((a, b) => b.value - a.value);
   const byVenueFamily = countBy(papers, getVenueFamily).sort((a, b) => b.value - a.value);
   const openArtifacts = papers.filter((paper) =>
@@ -1318,6 +1320,20 @@ function countBy(items, getLabel) {
     counts.set(label, (counts.get(label) ?? 0) + 1);
   });
   return Array.from(counts, ([label, value]) => ({ label, value }));
+}
+
+function countByMany(items, getLabels) {
+  const counts = new Map();
+  items.forEach((item) => {
+    new Set(getLabels(item)).forEach((label) => counts.set(label, (counts.get(label) ?? 0) + 1));
+  });
+  return Array.from(counts, ([label, value]) => ({ label, value }));
+}
+
+// `group` may be a single topic string or an array of topics.
+function getPaperGroups(paper, fallback = "Other") {
+  const groups = (Array.isArray(paper.group) ? paper.group : [paper.group]).filter(Boolean);
+  return groups.length || fallback === null ? groups : [fallback];
 }
 
 function getVenueFamily(paper) {

@@ -27,15 +27,16 @@ export const patents = [
   },
   {
     title: "Canonicalization of Data Within Open Knowledge Graphs",
-    number: "US20230087667A1",
+    number: "US12632724B2",
     country: "US",
     inventors: "Sarthak Dash, Gaetano Rossiello, Nandana Mihindukulasooriya, Sugato Bagchi, Alfio Massimiliano Gliozzo",
     assignee: "International Business Machines Corporation",
     priority: "2021-09-21",
     filed: "2021-09-21",
-    published: "2023-03-23",
+    granted: "2026-05-19",
+    published: "2026-05-19",
     summary: "Embodiments provide computer-implemented methods, computer program products, and computer systems that learn entity representations and cluster assignments in response to receiving information. The techniques canonicalize noun phrases and relation phrases within open knowledge graphs, helping reduce redundant information and improve downstream search, linking, and natural language processing tasks.",
-    href: "https://patents.google.com/patent/US20230087667A1/en"
+    href: "https://patents.google.com/patent/US12632724B2/en"
   },
   {
     title: "Knowledge Base Question Answering",
@@ -76,16 +77,17 @@ export const patents = [
     href: "https://patents.google.com/patent/US12072841B2/en"
   },
   {
-    title: "Generating Semantic Triplets from Unstructured Text",
-    number: "US20240202447A1",
+    title: "Generating Semantic Triplets from Unstructured Text Using Named Entities",
+    number: "US12423523B2",
     country: "US",
     inventors: "Gaetano Rossiello, Alfio Massimiliano Gliozzo, Nandana Sampath Mihindukulasooriya, Md Faisal Mahbub Chowdhury, Michael Robert Glass",
     assignee: "International Business Machines Corporation",
     priority: "2022-12-14",
     filed: "2022-12-14",
-    published: "2024-06-20",
+    granted: "2025-09-23",
+    published: "2025-09-23",
     summary: "An embodiment generates a training dataset by aligning text from a document database with a named entity from a knowledge base, then enhances the dataset with named entity types and labels. A trained natural language processing model identifies entities in unstructured text and generates semantic triplets that connect them to related entities in a knowledge graph.",
-    href: "https://patents.google.com/patent/US20240202447A1/en"
+    href: "https://patents.google.com/patent/US12423523B2/en"
   },
   {
     title: "Artificial Intelligence Based Metadata Semantic Enrichment",
@@ -138,15 +140,16 @@ export const patents = [
   },
   {
     title: "Permutation Invariance for Representing Linearized Tabular Data",
-    number: "US20230409806A1",
+    number: "US12242796B2",
     country: "US",
     inventors: "Sarthak Dash, Sugato Bagchi, Nandana Mihindukulasooriya, Alfio Massimiliano Gliozzo",
     assignee: "International Business Machines Corporation",
     priority: "2022-06-17",
     filed: "2022-06-17",
-    published: "2023-12-21",
+    granted: "2025-03-04",
+    published: "2025-03-04",
     summary: "An embodiment encodes permutation-invariant representations of linearized tabular data by assigning position identifiers to elements of a column or row. The representation preserves the meaning of tabular data when rows and columns are reordered, supporting improved table search, interpretation, question answering, and column annotation.",
-    href: "https://patents.google.com/patent/US20230409806A1/en"
+    href: "https://patents.google.com/patent/US12242796B2/en"
   },
   {
     title: "Knowledge Induction Using Corpus Expansion",

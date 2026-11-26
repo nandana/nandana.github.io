@@ -114,7 +114,7 @@ Every object in `publications` represents one paper. Array order is preserved wi
 | `venue` | Yes | Venue label shown on the card or row. |
 | `year` | Recommended | Displayed year and “Publications by Year” metric. |
 | `type` | Recommended | Displayed type and “Publication Types” metric, for example `Conference`, `Journal`, `Dataset`, or `Report`. |
-| `group` | Yes | Publication section and research-area metric. Matching is case-sensitive. |
+| `group` | Yes | Publication section and research-area metric. Use a string for one topic or an array such as `["Data Agents", "Data Science"]` for several; a paper is counted once under each topic. Matching is case-sensitive. |
 | `authors` | Yes | Author string. Names matching `profile.highlightNames` are bolded. Use `*` directly in the string for equal contribution. |
 | `summary` | No | Description shown only on featured cards. |
 | `tags` | No | Tag array. Featured cards show all tags; compact rows show the first four. |
