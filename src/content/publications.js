@@ -27,6 +27,10 @@ export const publications = [
       {
         "label": "arXiv",
         "href": "https://arxiv.org/abs/2510.21737"
+      },
+      {
+        "label": "Code",
+        "href": "https://github.com/ibm/data-product-benchmark"
       }
     ],
     "conference": "AACL"
@@ -39,7 +43,12 @@ export const publications = [
     "type": "Conference",
     "group": "Semantic Web",
     "authors": "Nandana Mihindukulasooriya, Niharika S. D\u2019Souza, Satyananda Kashyap, Oshani Seneviratne, Horst Samulowitz",
-    "links": [],
+    "links": [
+      {
+        "label": "Code",
+        "href": "https://github.com/IBM/agentic-text2sparql/"
+      }
+    ],
     "conference": "ISWC"
   },
   {
@@ -54,6 +63,10 @@ export const publications = [
       {
         "label": "Paper",
         "href": "https://ceur-ws.org/Vol-4284/paper4.pdf"
+      },
+      {
+        "label": "Code",
+        "href": "https://github.com/IBM/agentic-text2sparql/"
       }
     ],
     "conference": "ISWC"
@@ -86,6 +99,10 @@ export const publications = [
       {
         "label": "Paper",
         "href": "https://doi.org/10.1007/978-3-032-42029-9_3"
+      },
+      {
+        "label": "Code",
+        "href": "https://github.com/sven-h/beyond_edge_addition"
       }
     ],
     "conference": "ISWC"
@@ -188,8 +205,13 @@ export const publications = [
       {
         "label": "arXiv",
         "href": "https://arxiv.org/abs/2607.01977"
+      },
+      {
+        "label": "Code",
+        "href": "https://github.com/sciknoworg/OntoLearner/"
       }
-    ]
+    ],
+    "conference": "arXiv"
   },
   {
     "researchType": "Workshop",

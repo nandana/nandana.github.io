@@ -494,12 +494,12 @@ function ScholarMetrics() {
           <i className="ai ai-google-scholar" aria-hidden="true" />
           <span>Google Scholar</span>
         </a>
-        <small>Updated Sept 21, 2026</small>
+        <small>Updated Nov 26, 2026</small>
       </div>
       <div className="scholar-metrics-values">
-        <MetricStat label="Citations" value="2,158" />
-        <MetricStat label="h-index" value="24" />
-        <MetricStat label="i10-index" value="50" />
+        <MetricStat label="Citations" value="2,289" />
+        <MetricStat label="h-index" value="25" />
+        <MetricStat label="i10-index" value="53" />
       </div>
     </div>
   );
