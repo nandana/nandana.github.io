@@ -1865,6 +1865,27 @@ a:focus-visible {
   white-space: nowrap;
 }
 
+/* On narrow screens a no-wrap phrase can be wider than the screen, so let it wrap. */
+@media (max-width: 640px) {
+  .rich-text-nowrap {
+    display: inline;
+    white-space: normal;
+  }
+
+  /* The Scholar heading and its three figures don't fit on one phone-width row. */
+  .scholar-metrics {
+    flex-wrap: wrap;
+  }
+
+  .scholar-metrics-values {
+    gap: 18px;
+  }
+
+  .scholar-metric {
+    min-width: 0;
+  }
+}
+
 .timeline-duration {
   display: inline-flex;
   align-items: center;
@@ -2896,6 +2917,11 @@ a.hero-stat:hover dt {
   .hero-inner {
     grid-template-columns: minmax(0, 1fr);
     padding-top: 32px;
+  }
+
+  /* Scale the name with the screen so "Mihindukulasooriya," fits down to 320px. */
+  .hero-name {
+    font-size: clamp(1.9rem, 9.6vw, 2.6rem);
   }
 
   .hero-portrait {
