@@ -1772,7 +1772,8 @@ a:focus-visible {
   grid-template-columns: 72px minmax(0, 1fr) max-content;
 }
 
-.timeline-item.has-multiple-logos .timeline-logos {
+.timeline-item.has-multiple-logos .timeline-logos,
+.timeline-item.has-multiple-logos .timeline-countries {
   flex-direction: column;
 }
 
@@ -1809,16 +1810,19 @@ a:focus-visible {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 34px;
-  min-height: 25px;
-  padding: 2px 7px;
+  box-sizing: border-box;
+  /* Same width as .timeline-logo above it. */
+  width: 62px;
+  min-height: 28px;
+  padding: 3px 5px;
   border: 1px solid var(--border);
   border-radius: 999px;
   background: var(--surface);
   box-shadow: var(--subtle-shadow);
   cursor: default;
-  font-size: 1rem;
-  line-height: 1;
+  /* Large enough that the flag nearly fills the badge width. */
+  font-size: 2.5rem;
+  line-height: 0.8;
 }
 
 .timeline-item:hover {
@@ -2631,10 +2635,10 @@ a.timeline-place:hover {
   }
 
   .timeline-country {
-    min-width: 30px;
-    min-height: 22px;
-    padding: 2px 6px;
-    font-size: 0.88rem;
+    width: 46px;
+    min-height: 24px;
+    padding: 2px 4px;
+    font-size: 1.9rem;
   }
 
   .timeline-item.has-logo .timeline-dates {
