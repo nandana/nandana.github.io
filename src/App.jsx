@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Icon } from "@iconify/react";
 import {
   awards,
   education,
   experience,
+  featuredWork,
   news,
   profile,
   patents,
@@ -18,6 +19,7 @@ import {
   workshopOrganizers,
   conferenceOrganizers,
   programmeCommittees,
+  workshopProgrammeCommittees,
   standardizationActivities
 } from "./content/index.js";
 import {
@@ -125,6 +127,7 @@ function App() {
         <ConferenceOrganizerList items={conferenceOrganizers} />
         <WorkshopOrganizerList items={workshopOrganizers} />
         <ProgrammeCommitteeList items={programmeCommittees} />
+        <WorkshopProgrammeCommitteeList items={mergeOrganizedWorkshops(workshopProgrammeCommittees, workshopOrganizers)} />
         <StandardizationActivities groups={standardizationActivities} />
         <ServiceList items={services} />
       </>
@@ -197,6 +200,7 @@ function App() {
       </header>
 
       <Hero />
+      <FeaturedWork items={featuredWork} />
 
       <div className="page-shell">
         <aside className="profile-sidebar" aria-label="Research focus and news">
@@ -305,6 +309,181 @@ function Hero() {
       </div>
     </section>
   );
+}
+
+const featuredWorkDelay = 8000;
+
+function FeaturedWork({ items }) {
+  const perView = useCardsPerView();
+  const reducedMotion = usePrefersReducedMotion();
+  const maxIndex = Math.max(0, items.length - perView);
+  const overflows = maxIndex > 0;
+  const [index, setIndex] = useState(0);
+  const [playing, setPlaying] = useState(() => !getPrefersReducedMotion());
+  const [hovered, setHovered] = useState(false);
+  const [onScreen, setOnScreen] = useState(false);
+  const sectionRef = useRef(null);
+  const touchStart = useRef(null);
+
+  useEffect(() => {
+    setIndex((current) => Math.min(current, maxIndex));
+  }, [maxIndex]);
+
+  useEffect(() => {
+    if (reducedMotion) setPlaying(false);
+  }, [reducedMotion]);
+
+  useEffect(() => {
+    const element = sectionRef.current;
+    if (!element || typeof IntersectionObserver === "undefined") {
+      setOnScreen(true);
+      return undefined;
+    }
+    const observer = new IntersectionObserver(([entry]) => setOnScreen(entry.isIntersecting), { threshold: 0.35 });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  // Restarted after every move, so each card stays put for the full delay.
+  useEffect(() => {
+    if (!overflows || !playing || hovered || !onScreen) return undefined;
+    const timer = window.setTimeout(() => setIndex((current) => (current >= maxIndex ? 0 : current + 1)), featuredWorkDelay);
+    return () => window.clearTimeout(timer);
+  }, [overflows, playing, hovered, onScreen, index, maxIndex]);
+
+  if (!items?.length) return null;
+
+  const step = (direction) => {
+    setPlaying(false);
+    setIndex((current) => {
+      if (direction > 0) return current >= maxIndex ? 0 : current + 1;
+      return current <= 0 ? maxIndex : current - 1;
+    });
+  };
+
+  const handleTouchStart = (event) => {
+    const touch = event.touches[0];
+    touchStart.current = { x: touch.clientX, y: touch.clientY };
+  };
+
+  const handleTouchEnd = (event) => {
+    const start = touchStart.current;
+    touchStart.current = null;
+    if (!start || !overflows) return;
+    const touch = event.changedTouches[0];
+    const dx = touch.clientX - start.x;
+    const dy = touch.clientY - start.y;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) step(dx < 0 ? 1 : -1);
+  };
+
+  return (
+    <section
+      className="featured-work"
+      id="featured-work"
+      ref={sectionRef}
+      aria-roledescription="carousel"
+      aria-labelledby="featured-work-title"
+    >
+      <div className="section-title featured-work-title">
+        <h2 id="featured-work-title">
+          <TitleIcon icon={sectionIconMap["Featured Contributions"] ?? fallbackTitleIcon} />
+          <span>Featured Contributions</span>
+        </h2>
+        {overflows ? (
+          <div className="featured-work-controls">
+            <button type="button" className="featured-work-control" aria-label="Previous featured item" onClick={() => step(-1)}>
+              <i className="fa-solid fa-chevron-left" aria-hidden="true" />
+            </button>
+            <button type="button" className="featured-work-control" aria-label="Next featured item" onClick={() => step(1)}>
+              <i className="fa-solid fa-chevron-right" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className="featured-work-control"
+              aria-label={playing ? "Pause automatic rotation" : "Start automatic rotation"}
+              onClick={() => setPlaying((value) => !value)}
+            >
+              <i className={playing ? "fa-solid fa-pause" : "fa-solid fa-play"} aria-hidden="true" />
+            </button>
+          </div>
+        ) : null}
+      </div>
+      <div
+        className="featured-work-viewport"
+        aria-live={overflows && playing ? "off" : "polite"}
+        onPointerEnter={(event) => { if (event.pointerType === "mouse") setHovered(true); }}
+        onPointerLeave={() => setHovered(false)}
+        onFocus={() => { if (overflows) setPlaying(false); }}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        <div className="featured-work-track" style={{ "--per-view": perView, "--index": index }}>
+          {items.map((item, itemIndex) => {
+            const hidden = itemIndex < index || itemIndex >= index + perView;
+            const external = /^https?:/.test(item.link?.href ?? "");
+            return (
+              <article
+                className="featured-card"
+                key={item.title}
+                role="group"
+                aria-roledescription="slide"
+                aria-label={`${itemIndex + 1} of ${items.length}: ${item.title}`}
+                aria-hidden={hidden || undefined}
+                inert={hidden || undefined}
+              >
+                <h3>{item.title}</h3>
+                {item.image ? (
+                  <figure className="featured-card-figure">
+                    <img src={item.image} alt={item.imageAlt ?? ""} loading="lazy" decoding="async" />
+                  </figure>
+                ) : null}
+                {(Array.isArray(item.body) ? item.body : [item.body]).filter(Boolean).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                {item.link?.href ? (
+                  <a className="featured-card-link" href={item.link.href} {...(external ? { target: "_blank", rel: "noreferrer" } : {})}>
+                    <span>{item.link.label}</span>
+                    <span aria-hidden="true">→</span>
+                  </a>
+                ) : null}
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function getCardsPerView() {
+  if (typeof window === "undefined") return 3;
+  if (window.matchMedia("(max-width: 640px)").matches) return 1;
+  if (window.matchMedia("(max-width: 960px)").matches) return 2;
+  return 3;
+}
+
+function useCardsPerView() {
+  const [perView, setPerView] = useState(getCardsPerView);
+  useEffect(() => {
+    const queries = ["(max-width: 640px)", "(max-width: 960px)"].map((query) => window.matchMedia(query));
+    const update = () => setPerView(getCardsPerView());
+    queries.forEach((query) => query.addEventListener("change", update));
+    return () => queries.forEach((query) => query.removeEventListener("change", update));
+  }, []);
+  return perView;
+}
+
+function getPrefersReducedMotion() {
+  return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(getPrefersReducedMotion);
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduced(query.matches);
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  return reduced;
 }
 
 function SidebarProfile() {
@@ -1267,6 +1446,69 @@ function ProgrammeCommitteeList({ items }) {
       <div className="details-toggle-row"><button className="publication-details-toggle workshop-organizer-toggle" type="button" aria-expanded={detailsOpen} onClick={() => setDetailsOpen((value) => !value)}><span>{detailsOpen ? "Hide programme committee list" : `Show ${visible.length} conferences`}</span><i className={`fa-solid fa-chevron-${detailsOpen ? "up" : "down"}`} aria-hidden="true" /></button></div>
       {detailsOpen ? visible.map((item) => <article className="workshop-organizer-card" key={`${item.acronym}-${item.title}`}><h3><span className="workshop-acronym">{item.acronym}</span> <span>{item.title}</span></h3><div className="programme-roles">{item.roles.map((role) => <span key={role}>{role}</span>)}</div><div className="action-links"><a href={item.website} target="_blank" rel="noreferrer"><i className="fa-solid fa-globe" aria-hidden="true" /><span>Website</span></a>{item.proceedings.map((proceeding) => { const url = typeof proceeding === "string" ? proceeding : proceeding.url; const label = typeof proceeding === "string" ? "Proceedings" : proceeding.label; return <a href={url} target="_blank" rel="noreferrer" key={url}><i className="fa-solid fa-file-lines" aria-hidden="true" /><span>{label}</span></a>; })}</div></article>) : null}
       {detailsOpen && !visible.length ? <p className="publication-empty">No programme committees match the selected filters.</p> : null}
+    </div>
+  );
+}
+
+// Workshops Nandana organized are also listed as programme committee roles.
+// Entries already in the PC list (same acronym and title) are not repeated.
+function mergeOrganizedWorkshops(pcItems, organizedItems) {
+  const key = (item) => `${item.acronym}|${item.title}`;
+  const listed = new Set(pcItems.map(key));
+  const organized = organizedItems
+    .filter((item) => !listed.has(key(item)))
+    .map((item) => ({
+      acronym: item.acronym,
+      title: item.title,
+      year: item.year,
+      colocatedWith: item.conference,
+      website: item.website,
+      proceedingsUrl: item.proceedingsUrl
+    }));
+  return [...pcItems, ...organized];
+}
+
+function WorkshopProgrammeCommitteeList({ items }) {
+  const [filter, setFilter] = useState("All");
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const series = (item) => item.acronym?.replace(/\s+20\d{2}$/, "");
+  const ordered = [...items].sort((a, b) => Number(b.year) - Number(a.year));
+  const acronyms = Array.from(new Set(ordered.map(series).filter(Boolean))).sort();
+  const visible = ordered.filter((item) => filter === "All" || series(item) === filter);
+
+  return (
+    <div className="workshop-organizer-list conference-organizer-list">
+      <div className="service-subsection-title">
+        <h3>Workshop Programme Committee (PC)</h3>
+        <span>{items.length} workshops</span>
+      </div>
+      <div className="workshop-organizer-filters" aria-label="Workshop programme committee filters">
+        {["All", ...acronyms].map((acronym) => (
+          <button key={acronym} type="button" className={filter === acronym ? "is-active" : ""} onClick={() => { setFilter(acronym); setDetailsOpen(true); }}>
+            {acronym} ({acronym === "All" ? items.length : items.filter((item) => series(item) === acronym).length})
+          </button>
+        ))}
+      </div>
+      <div className="details-toggle-row">
+        <button className="publication-details-toggle workshop-organizer-toggle" type="button" aria-expanded={detailsOpen} onClick={() => setDetailsOpen((value) => !value)}>
+          <span>{detailsOpen ? "Hide workshop programme committee list" : `Show ${visible.length} workshops`}</span>
+          <i className={`fa-solid fa-chevron-${detailsOpen ? "up" : "down"}`} aria-hidden="true" />
+        </button>
+      </div>
+      {detailsOpen ? visible.map((item) => (
+        <article className="workshop-organizer-card" key={`${item.acronym}-${item.title}`}>
+          <h3><span className="workshop-acronym">{item.acronym}</span> <span>{item.title}</span></h3>
+          <div className="workshop-organizer-meta">
+            <span><strong>{item.role ?? "Programme Committee"}</strong></span>
+            <span><strong>Co-located with</strong> {item.colocatedWith}</span>
+            <span><strong>Year</strong> {item.year}</span>
+          </div>
+          <div className="action-links">
+            {item.proceedingsUrl ? <a href={item.proceedingsUrl} target="_blank" rel="noreferrer"><i className="fa-solid fa-file-lines" aria-hidden="true" /><span>Proceedings</span></a> : null}
+            {item.website ? <a href={item.website} target="_blank" rel="noreferrer"><i className="fa-solid fa-globe" aria-hidden="true" /><span>Website</span></a> : null}
+          </div>
+        </article>
+      )) : null}
     </div>
   );
 }

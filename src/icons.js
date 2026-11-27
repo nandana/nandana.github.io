@@ -10,6 +10,7 @@ import chartIncreasingIcon from "@iconify-icons/twemoji/chart-increasing";
 import classicalBuildingIcon from "@iconify-icons/twemoji/classical-building";
 import clipboardIcon from "@iconify-icons/twemoji/clipboard";
 import globeIcon from "@iconify-icons/twemoji/globe-with-meridians";
+import glowingStarIcon from "@iconify-icons/twemoji/glowing-star";
 import graduationCapIcon from "@iconify-icons/twemoji/graduation-cap";
 import identificationCardIcon from "@iconify-icons/twemoji/identification-card";
 import ledgerIcon from "@iconify-icons/twemoji/ledger";
@@ -60,6 +61,7 @@ export const sectionIconMap = {
   Talks: speechBalloonIcon,
   Education: graduationCapIcon,
   Experience: briefcaseIcon,
+  "Featured Contributions": glowingStarIcon,
   Awards: trophyIcon,
   Honors: trophyIcon,
   "Academic Service": clipboardIcon,

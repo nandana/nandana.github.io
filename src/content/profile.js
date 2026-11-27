@@ -25,7 +25,7 @@ export const profile = {
       "I study how AI systems can answer questions over knowledge graphs, tables, and text. At IBM Research, I build agents that find relevant data and turn natural-language questions into queries.",
     actions: [
       { label: "View publications", href: "#publications" },
-      { label: "About my work", href: "#about" }
+      { label: "Explore featured work", href: "#featured-work" }
     ]
   },
   // Google Scholar figures, shown in the hero and the Publications section.

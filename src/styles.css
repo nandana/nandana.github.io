@@ -223,6 +223,18 @@
   --fa: "\f04b";
 }
 
+.fa-pause {
+  --fa: "\f04c";
+}
+
+.fa-chevron-left {
+  --fa: "\f053";
+}
+
+.fa-chevron-right {
+  --fa: "\f054";
+}
+
 .fa-quote-right {
   --fa: "\f10e";
 }
@@ -2893,5 +2905,150 @@ a.hero-stat:hover dt {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     margin-top: 32px;
+  }
+}
+
+/* Featured Work carousel ------------------------------------------------- */
+
+.featured-work {
+  --featured-gap: 20px;
+  width: var(--section);
+  margin: 0 auto;
+  padding-top: 36px;
+  scroll-margin-top: 72px;
+}
+
+.featured-work-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.featured-work-title h2 {
+  border-bottom: 0;
+}
+
+.featured-work-controls {
+  display: flex;
+  gap: 8px;
+  padding-bottom: 10px;
+}
+
+.featured-work-control {
+  display: inline-grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--control-bg);
+  color: var(--icon-text);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.featured-work-control:hover {
+  border-color: var(--title-icon-border);
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+.featured-work-control:focus-visible,
+.featured-card-link:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.featured-work-viewport {
+  overflow: hidden;
+  /* Room for card shadows and focus rings, which overflow: hidden would clip. */
+  margin: -6px;
+  padding: 6px;
+}
+
+.featured-work-track {
+  display: flex;
+  gap: var(--featured-gap);
+  transform: translateX(calc(var(--index) * -1 * (100% + var(--featured-gap)) / var(--per-view)));
+  transition: transform 0.5s ease;
+}
+
+.featured-card {
+  flex: 0 0 calc((100% - (var(--per-view) - 1) * var(--featured-gap)) / var(--per-view));
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel-bg);
+  box-shadow: var(--subtle-shadow);
+}
+
+.featured-card h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.featured-card-figure {
+  margin: 0;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--figure-bg);
+}
+
+.featured-card-figure img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* contain, not cover, so figure labels are never cropped */
+  object-fit: contain;
+}
+
+.featured-card p {
+  margin: 0;
+  color: var(--body-copy);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.featured-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 4px;
+  color: var(--blue);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.featured-card-link:hover span:first-child {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .featured-work {
+    padding-top: 28px;
+  }
+
+  .featured-card {
+    padding: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .featured-work-track {
+    transition: none;
   }
 }
