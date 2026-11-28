@@ -70,3 +70,7 @@ export const standardizationActivities = [
     ]
   }
 ];
+
+// Shown under the Standardization Activities heading.
+export const standardizationSummary =
+  "Contributed to international standards for knowledge graphs, open data, and web services through six groups. At the World Wide Web Consortium (W3C): the Linked Data Platform, Data on the Web Best Practices, and Dataset Exchange Working Groups, and the Knowledge Graph Construction Community Group. At the Organization for the Advancement of Structured Information Standards (OASIS): the Web Services Secure Exchange (WS-SX) and Web Services Federation (WS-FED) Technical Committees.";

@@ -45,7 +45,7 @@ The `sections` array controls page order and navigation from one place:
 | `note` | No | Small note beside the section heading. |
 | `enabled` | No | Set to `false` to hide the section and its nav item. |
 
-Supported IDs are `about`, `metrics`, `news`, `publications`, `teaching`, `talks`, `education`, `experience`, `awards`, `service`, and `projects`. An unknown ID has no renderer and is skipped.
+Supported IDs are `about`, `metrics`, `news`, `publications`, `teaching`, `talks`, `education`, `experience`, `awards`, `service`, `openSource`, and `projects`. An unknown ID has no renderer and is skipped.
 
 ### `publicationGroups`
 
@@ -71,14 +71,14 @@ Custom group names work. Names not listed in `publicationGroupIconMap` use the d
 | `nativeName` | No | Native-language name shown below `name`. |
 | `role` | No | Job or academic role. |
 | `organization` | No | Affiliation shown with the role. |
-| `organizationUrl` | No | Reserved for custom layouts; the current sidebar does not render this link. |
-| `location` | No | Sidebar location. |
-| `email` | No | Sidebar/footer email and `mailto:` target. |
+| `organizationUrl` | No | Reserved for custom layouts; the current layout does not render this link. |
+| `location` | No | Location (not currently shown; the hero eyebrow line in `hero.eyebrow` names the city). |
+| `email` | No | Footer email and `mailto:` target. |
 | `avatar` | No | Image path such as `images/avatar.webp`. Leave empty for generated initials. |
-| `focus` | No | Array of research-area tags in Profile Details. |
+| `focus` | No | Research topics, shown as one line under the introduction in the hero. |
 | `highlightNames` | No | Exact author-name strings to bold in publication author lists. Defaults to `name`. |
 | `about` | Yes | Array of paragraphs; each paragraph may be a string or rich-text array. |
-| `links` | Yes | Sidebar profile links. An empty array is valid. |
+| `links` | Yes | Profile links, shown as text links in the hero. An empty array is valid. |
 
 Profile link objects use these fields:
 
@@ -259,7 +259,7 @@ Action icons are inferred from `label` and `href`. Common labels include `Paper`
 | `text` | Yes | Announcement text. |
 | `href` | Yes | Destination opened by the news row. |
 
-The main News section shows every item. Profile Details shows the first four, so keep this array newest-first.
+The Latest news strip below Featured Contributions shows one item at a time, newest date first (it sorts by `date`), with previous/next buttons when there is more than one. The optional main News section shows every item.
 
 Built-in icon keys are `release`, `accepted`, `dataset`, `code`, `talk`, `teaching`, `award`, `career`, `degree`, `visit`, and `service`. Unknown keys fall back to the accepted-paper icon.
 
@@ -335,3 +335,18 @@ npm run preview
 ```
 
 Then check the profile, section order, publication grouping, featured/compact split, publication images, links, GitHub star badges, light and dark themes, and the mobile layout. For every PNG/JPEG publication figure, verify that the same-name WebP exists in both `public/images/` and the generated `dist/images/` directory.
+
+## `peopleAndPlaces.js`
+
+Photos for the People & Places strip at the end of About. The section is hidden while the array is empty. Photos appear in array order, so put a workshop candid and a travel photo first.
+
+| Field | Required | What to enter |
+| --- | --- | --- |
+| `image` | Yes | Path under `public/`, e.g. `images/places/iswc-2025-workshop.webp`. |
+| `alt` | Yes | What the photo shows, for screen readers. |
+| `caption` | No | Short visible caption under the photo. |
+| `focus` | No | CSS `object-position` (e.g. `"50% 30%"`) to keep faces inside the 4:3 frame. Defaults to `50% 35%`. |
+
+Photos are cropped to 4:3. Export them at about 1200 × 900 px.
+
+When there are more photos than fit, the strip drifts continuously from page load (about 28px per second, `peopleAndPlacesSpeed` in `src/App.jsx`) and loops seamlessly. It pauses while the pointer is over it, stops when a visitor uses the arrows, swipes, or tabs into it, and has a Pause/Play button. It starts paused for visitors who prefer reduced motion.

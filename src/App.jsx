@@ -6,6 +6,8 @@ import {
   experience,
   featuredWork,
   news,
+  openSource,
+  peopleAndPlaces,
   profile,
   patents,
   projects,
@@ -20,7 +22,8 @@ import {
   conferenceOrganizers,
   programmeCommittees,
   workshopProgrammeCommittees,
-  standardizationActivities
+  standardizationActivities,
+  standardizationSummary
 } from "./content/index.js";
 import {
   fallbackTitleIcon,
@@ -93,11 +96,14 @@ function App() {
 
   const sectionContent = {
     about: (
-      <div className="intro-copy">
-        {profile.about.map((paragraph, index) => (
-          <p key={index}>{renderRichText(paragraph)}</p>
-        ))}
-      </div>
+      <>
+        <div className="intro-copy">
+          {profile.about.map((paragraph, index) => (
+            <p key={index}>{renderRichText(paragraph)}</p>
+          ))}
+        </div>
+        <PeopleAndPlaces items={peopleAndPlaces} />
+      </>
     ),
     metrics: <MetricsDashboard stats={stats} />,
     news: (
@@ -116,6 +122,7 @@ function App() {
     ),
     publications: <PublicationBrowser papers={publications} githubStats={githubStats} />,
     projects: <ProjectList items={projects} githubStats={githubStats} />,
+    openSource: <OpenSourceList groups={openSource} />,
     teaching: <CollapsibleSectionList label="mentoring activities" items={teaching} render={(items) => <MentoringList items={items} />} />,
     talks: <CollapsibleSectionList label="invited talks" items={talks} render={(items) => <Timeline items={items} />} />,
     education: <Timeline items={education} />,
@@ -201,12 +208,9 @@ function App() {
 
       <Hero />
       <FeaturedWork items={featuredWork} />
+      <NewsStrip items={news} />
 
       <div className="page-shell">
-        <aside className="profile-sidebar" aria-label="Research focus and news">
-          <SidebarProfile />
-        </aside>
-
         <main className="content-main" id="main-content">
           {visibleSections.map((section) => {
             const content = sectionContent[section.id];
@@ -267,6 +271,11 @@ function Hero() {
             ) : null}
           </h1>
           {profile.hero?.intro ? <p className="hero-intro">{profile.hero.intro}</p> : null}
+          {profile.focus?.length ? (
+            <ul className="hero-topics" aria-label="Research topics">
+              {profile.focus.map((topic) => <li key={topic}>{topic}</li>)}
+            </ul>
+          ) : null}
           {profile.hero?.actions?.length ? (
             <div className="hero-actions">
               {profile.hero.actions.map((action, index) => (
@@ -486,51 +495,160 @@ function usePrefersReducedMotion() {
   return reduced;
 }
 
-function SidebarProfile() {
-  const [detailsOpen, setDetailsOpen] = useState(false);
+function NewsStrip({ items }) {
+  const ordered = useMemo(() => [...items].sort((a, b) => String(b.date).localeCompare(String(a.date))), [items]);
+  const [index, setIndex] = useState(0);
+  if (!ordered.length) return null;
+
+  const item = ordered[index];
+  const many = ordered.length > 1;
+  const move = (direction) => setIndex((current) => (current + direction + ordered.length) % ordered.length);
 
   return (
-    <div className="sidebar-card">
-      <button
-        className="sidebar-toggle"
-        type="button"
-        aria-controls="profile-details"
-        aria-expanded={detailsOpen}
-        onClick={() => setDetailsOpen((value) => !value)}
-      >
-        <span>Research Focus &amp; News</span>
-        <i className={`fa-solid fa-chevron-${detailsOpen ? "up" : "down"}`} aria-hidden="true" />
-      </button>
+    <section className="news-strip" aria-label="Latest news">
+      <span className="news-strip-label">Latest News</span>
+      <div className="news-strip-item" aria-live="polite">
+        <time>{item.date}</time>
+        <span className="news-strip-text">
+          {item.href ? <a href={item.href} target="_blank" rel="noreferrer">{renderRichText(item.text)}</a> : renderRichText(item.text)}
+        </span>
+      </div>
+      {many ? (
+        <div className="news-strip-controls">
+          <button type="button" aria-label="Previous news item" onClick={() => move(-1)}>
+            <i className="fa-solid fa-chevron-left" aria-hidden="true" />
+          </button>
+          <span className="news-strip-count">{index + 1} / {ordered.length}</span>
+          <button type="button" aria-label="Next news item" onClick={() => move(1)}>
+            <i className="fa-solid fa-chevron-right" aria-hidden="true" />
+          </button>
+        </div>
+      ) : null}
+    </section>
+  );
+}
 
-      <div id="profile-details" className={`sidebar-collapsible${detailsOpen ? " is-open" : ""}`}>
-        {profile.focus?.length ? (
-          <div className="sidebar-block">
-            <h2>Research Focus</h2>
-            <TagList items={profile.focus} className="focus-row" />
-          </div>
-        ) : null}
+// Continuous drift speed for People & Places, in pixels per second.
+const peopleAndPlacesSpeed = 28;
 
-        {news.length ? (
-          <div className="sidebar-block">
-            <h2>Recent News</h2>
-            <div className="sidebar-news">
-              {news.slice(0, 4).map((item) => (
-                <div className="sidebar-news-item" key={item.date}>
-                  <time>{item.date}</time>
-                  <span className="sidebar-news-text">
-                    <span className="sidebar-news-icon" aria-hidden="true">
-                      <SemanticIcon icon={newsIconMap[item.icon] ?? newsIconMap.accepted} />
-                    </span>
-                    <span>{item.href ? <a href={item.href} target="_blank" rel="noreferrer">{item.text}</a> : renderRichText(item.text)}</span>
-                  </span>
-                </div>
-              ))}
-            </div>
+function PeopleAndPlaces({ items }) {
+  const scrollerRef = useRef(null);
+  const positionRef = useRef(0);
+  const [overflow, setOverflow] = useState(false);
+  const [playing, setPlaying] = useState(() => !getPrefersReducedMotion());
+  const reducedMotion = usePrefersReducedMotion();
+  const hasItems = Boolean(items?.length);
+  // A second copy of the photos makes the drift loop seamlessly.
+  const looping = overflow;
+
+  useEffect(() => {
+    if (reducedMotion) setPlaying(false);
+  }, [reducedMotion]);
+
+  // Does one set of photos overflow the strip? Measured on the first set only.
+  useEffect(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return undefined;
+    const measure = () => setOverflow(getSetWidth(scroller, items.length) - getGap(scroller) > scroller.clientWidth + 1);
+    measure();
+    const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(measure);
+    observer?.observe(scroller);
+    return () => observer?.disconnect();
+  }, [hasItems, items?.length]);
+
+  // Glide continuously while playing; wrap back by one set width so the loop is invisible.
+  useEffect(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller || !looping || !playing) return undefined;
+    positionRef.current = scroller.scrollLeft;
+    let last = performance.now();
+    let frame = 0;
+    const tick = (now) => {
+      // Hold still while a mouse is over the strip. Checked every frame because the
+      // strip moves under a stationary pointer, which makes enter/leave events unreliable.
+      if (scroller.matches(":hover")) {
+        last = now;
+        frame = requestAnimationFrame(tick);
+        return;
+      }
+      const setWidth = getSetWidth(scroller, items.length);
+      positionRef.current += (peopleAndPlacesSpeed * Math.min(now - last, 100)) / 1000;
+      last = now;
+      if (setWidth > 0 && positionRef.current >= setWidth) positionRef.current -= setWidth;
+      scroller.scrollLeft = positionRef.current;
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [looping, playing, items?.length]);
+
+  if (!hasItems) return null;
+
+  // Any manual browsing stops the drift until the visitor presses Play.
+  const stopRotation = () => setPlaying(false);
+  const step = (direction) => {
+    stopRotation();
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    const setWidth = getSetWidth(scroller, items.length);
+    const card = scroller.querySelector(".place-card").getBoundingClientRect().width + getGap(scroller);
+    // Stay inside the doubled strip: jump by one set width (invisible) before moving.
+    if (direction < 0 && scroller.scrollLeft < card) scroller.scrollLeft += setWidth;
+    if (direction > 0 && scroller.scrollLeft + scroller.clientWidth + card > scroller.scrollWidth) scroller.scrollLeft -= setWidth;
+    scroller.scrollBy({ left: direction * card, behavior: getPrefersReducedMotion() ? "auto" : "smooth" });
+  };
+
+  const renderPhoto = (item, copy) => (
+    <li className="place-card" key={`${copy}-${item.image}`} aria-hidden={copy ? true : undefined} inert={copy ? true : undefined}>
+      <figure>
+        <img src={item.image} alt={copy ? "" : item.alt ?? ""} loading="lazy" decoding="async" style={item.focus ? { objectPosition: item.focus } : undefined} />
+        {item.caption ? <figcaption>{item.caption}</figcaption> : null}
+      </figure>
+    </li>
+  );
+
+  return (
+    <div className="people-places" aria-labelledby="people-places-title">
+      <div className="people-places-header">
+        <h3 id="people-places-title">People &amp; Places</h3>
+        {overflow ? (
+          <div className="people-places-controls">
+            <button type="button" className="featured-work-control" aria-label="Previous photo" onClick={() => step(-1)}>
+              <i className="fa-solid fa-chevron-left" aria-hidden="true" />
+            </button>
+            <button type="button" className="featured-work-control" aria-label="Next photo" onClick={() => step(1)}>
+              <i className="fa-solid fa-chevron-right" aria-hidden="true" />
+            </button>
+            <button type="button" className="featured-work-control" aria-label={playing ? "Pause photo rotation" : "Start photo rotation"} onClick={() => setPlaying((value) => !value)}>
+              <i className={playing ? "fa-solid fa-pause" : "fa-solid fa-play"} aria-hidden="true" />
+            </button>
           </div>
         ) : null}
       </div>
+      <ul
+        className={`people-places-track${looping && playing ? " is-drifting" : ""}`}
+        ref={scrollerRef}
+        onTouchStart={stopRotation}
+        onWheel={(event) => { if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) stopRotation(); }}
+        onFocus={stopRotation}
+      >
+        {items.map((item) => renderPhoto(item, false))}
+        {looping ? items.map((item) => renderPhoto(item, true)) : null}
+      </ul>
     </div>
   );
+}
+
+function getGap(scroller) {
+  return parseFloat(getComputedStyle(scroller).columnGap) || 0;
+}
+
+// Width of one set of photos including the gap after it, i.e. where the copy starts.
+function getSetWidth(scroller, count) {
+  const cards = scroller.querySelectorAll(".place-card");
+  if (!cards.length) return 0;
+  if (cards.length > count) return cards[count].offsetLeft - cards[0].offsetLeft;
+  return cards[0].getBoundingClientRect().width * count + getGap(scroller) * count;
 }
 
 function MetricsDashboard({ stats }) {
@@ -1125,16 +1243,21 @@ function Timeline({ items }) {
         const countries = item.countries ?? (item.countryFlag ? [{ name: item.country, flag: item.countryFlag }] : []);
 
         return (
-        <div className={`timeline-item${logos.length || item.logoText ? " has-logo" : ""}${logos.length > 1 ? " has-multiple-logos" : ""}`} key={`${item.period}-${item.title}-${index}`}>
+        <div className={`timeline-item${logos.length || item.logoText ? " has-logo" : ""}`} key={`${item.period}-${item.title}-${index}`}>
           {logos.length || item.logoText ? (
             <div className="timeline-identity">
-              <div className="timeline-logos">
-                {logos.map((logo) => <div className="timeline-logo" key={logo.src}><img src={logo.src} alt={logo.alt} /></div>)}
-                {!logos.length && item.logoText ? <div className="timeline-logo"><span>{item.logoText}</span></div> : null}
-              </div>
-              <div className="timeline-countries">
-                {countries.map((country) => <span className="timeline-country" title={country.name} aria-label={country.name} key={country.name}>{country.flag}</span>)}
-              </div>
+              {/* Each logo sits beside its country flag; logos and countries pair up by position. */}
+              {Array.from({ length: Math.max(logos.length || 1, countries.length) }, (_, row) => {
+                const logo = logos[row];
+                const country = countries[row];
+                return (
+                  <div className="timeline-identity-row" key={logo?.src ?? country?.name ?? row}>
+                    {logo ? <div className="timeline-logo"><img src={logo.src} alt={logo.alt} /></div> : null}
+                    {!logos.length && row === 0 && item.logoText ? <div className="timeline-logo"><span>{item.logoText}</span></div> : null}
+                    {country ? <span className="timeline-country" title={country.name} aria-label={country.name}>{country.flag}</span> : null}
+                  </div>
+                );
+              })}
             </div>
           ) : null}
           <div className="timeline-main">
@@ -1468,6 +1591,41 @@ function mergeOrganizedWorkshops(pcItems, organizedItems) {
   return [...pcItems, ...organized];
 }
 
+function OpenSourceList({ groups }) {
+  const [detailsOpen, setDetailsOpen] = useState(false);
+
+  return (
+    <div className="open-source">
+      <div className="details-toggle-row">
+        <button className="publication-details-toggle workshop-organizer-toggle" type="button" aria-expanded={detailsOpen} onClick={() => setDetailsOpen((value) => !value)}>
+          <span>{detailsOpen ? "Hide open source contributions" : "Show open source contributions"}</span>
+          <i className={`fa-solid fa-chevron-${detailsOpen ? "up" : "down"}`} aria-hidden="true" />
+        </button>
+      </div>
+      {detailsOpen ? groups.map((group) => (
+        <div className="workshop-organizer-list" key={group.title}>
+          <div className="service-subsection-title"><h3>{group.title}</h3></div>
+          {group.items.map((item) => (
+            <article className="workshop-organizer-card open-source-card" key={item.title}>
+              {item.logo ? (
+                <div className="open-source-logo">
+                  <img src={item.logo.src} alt={item.logo.alt} decoding="async" />
+                </div>
+              ) : null}
+              <div className="open-source-body">
+                <h4>{item.title}</h4>
+                {item.meta ? <div className="workshop-organizer-meta"><span>{item.meta}</span></div> : null}
+                {item.description ? <p>{item.description}</p> : null}
+                <ActionLinks links={item.links} />
+              </div>
+            </article>
+          ))}
+        </div>
+      )) : null}
+    </div>
+  );
+}
+
 function WorkshopProgrammeCommitteeList({ items }) {
   const [filter, setFilter] = useState("All");
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -1521,8 +1679,8 @@ function StandardizationActivities({ groups }) {
     <div className="workshop-organizer-list standardization-list">
       <div className="service-subsection-title">
         <h3>Standardization Activities</h3>
-        <span>Member of 6 international standardization groups across W3C and OASIS.</span>
       </div>
+      {standardizationSummary ? <p className="service-subsection-note">{standardizationSummary}</p> : null}
       <div className="details-toggle-row">
         <button className="publication-details-toggle workshop-organizer-toggle" type="button" aria-expanded={detailsOpen} onClick={() => setDetailsOpen((value) => !value)}>
           <span>{detailsOpen ? "Hide standardization activities" : `Show ${activityCount} activities`}</span>

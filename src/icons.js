@@ -10,6 +10,7 @@ import chartIncreasingIcon from "@iconify-icons/twemoji/chart-increasing";
 import classicalBuildingIcon from "@iconify-icons/twemoji/classical-building";
 import clipboardIcon from "@iconify-icons/twemoji/clipboard";
 import globeIcon from "@iconify-icons/twemoji/globe-with-meridians";
+import hammerAndWrenchIcon from "@iconify-icons/twemoji/hammer-and-wrench";
 import glowingStarIcon from "@iconify-icons/twemoji/glowing-star";
 import graduationCapIcon from "@iconify-icons/twemoji/graduation-cap";
 import identificationCardIcon from "@iconify-icons/twemoji/identification-card";
@@ -62,6 +63,7 @@ export const sectionIconMap = {
   Education: graduationCapIcon,
   Experience: briefcaseIcon,
   "Featured Contributions": glowingStarIcon,
+  "Open Source Contributions": hammerAndWrenchIcon,
   Awards: trophyIcon,
   Honors: trophyIcon,
   "Academic Service": clipboardIcon,
@@ -115,6 +117,7 @@ export const statusIconMap = {
 };
 
 export function getActionIcon(link) {
+  if (link.icon) return link.icon;
   const label = normalize(link.label);
   const href = normalize(link.href);
 

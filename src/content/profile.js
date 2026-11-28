@@ -7,14 +7,12 @@ export const profile = {
   location: "New York, USA",
   email: "nandana.cse@gmail.com",
   avatar: "images/nandana.jpeg",
+  // Research topics, shown as one line under the introduction.
   focus: [
-    "LLM Agents",
-    "Knowledge Graphs",
-    "Knowledge Representation",
-    "Information Retrieval",
-    "Neuro-Symbolic AI",
-    "Semantic Layers",
-    "Context Engineering"
+    "Knowledge graphs",
+    "LLM agents",
+    "Information retrieval",
+    "Neuro-symbolic AI"
   ],
   highlightNames: ["Nandana Mihindukulasooriya"],
   hero: {
